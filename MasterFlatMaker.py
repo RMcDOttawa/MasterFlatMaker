@@ -8,13 +8,13 @@ from CommandLineHandler import CommandLineHandler
 from DataModel import DataModel
 from MainWindow import MainWindow
 # First phase in development of automated calibration frame combination.
-# This program combines Dark Frames into a master dark.  If run without parameters, a GUI
+# This program combines Flat Frames into a master flat.  If run without parameters, a GUI
 # window opens.  If run given a list of file names as args, then those are immediately processed
 # without the UI interaction.  Preferences control how they are combined and where the result goes.
 from Preferences import Preferences
 
 # Set up command line arguments
-arg_parser = ArgumentParser(description="Combine Dark-Frame FITS files into a master dark")
+arg_parser = ArgumentParser(description="Combine Flat-Frame FITS files into a master flat")
 arg_parser.add_argument("-g", "--gui", action="store_true",
                         help="Force GUI interface to open, ignoring other arguments")
 

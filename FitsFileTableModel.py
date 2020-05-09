@@ -134,7 +134,7 @@ class FitsFileTableModel(QAbstractTableModel):
             # We're honouring FITS file type, so we allow selection only of FLAT files
             row_index = index.row()
             descriptor = self._files_list[row_index]
-            selectable_option = Qt.ItemIsSelectable if descriptor.get_type() == FileDescriptor.FILE_TYPE_DARK else 0
+            selectable_option = Qt.ItemIsSelectable if descriptor.get_type() == FileDescriptor.FILE_TYPE_FLAT else 0
         return selectable_option | Qt.ItemIsEnabled
 
     # Clear all the data from the table

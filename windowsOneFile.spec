@@ -3,8 +3,8 @@
 block_cipher = None
 
 
-a = Analysis(['MasterDarkMaker.py'],
-             pathex=['\\\\Mac\\Dropbox\\Dropbox\\EWHO\\Application Development\\MasterDarkMaker'],
+a = Analysis(['MasterFlatMaker.py'],
+             pathex=['\\\\Mac\\Dropbox\\Dropbox\\EWHO\\Application Development\\MasterFlatMaker'],
              binaries=[],
              datas=[('MainWindow.ui', '.'),
              ('ConsoleWindow.ui', '.'),
@@ -25,7 +25,7 @@ exe = EXE(pyz,
           a.zipfiles,
           a.datas,
           [],
-          name='MasterDarkMaker',
+          name='MasterFlatMaker',
           debug=False,
           bootloader_ignore_signals=False,
           strip=False,

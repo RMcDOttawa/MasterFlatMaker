@@ -194,13 +194,13 @@ class CommandLineHandler:
         """Process all the files listed in the command line, with the given combination settings"""
         success = True
         file_descriptors = RmFitsUtil.make_file_descriptions(file_names)
-        # check types are all dark
+        # check types are all Flat
         if self._data_model.get_ignore_file_type() \
-                or FileCombiner.all_of_type(file_descriptors, FileDescriptor.FILE_TYPE_DARK):
+                or FileCombiner.all_of_type(file_descriptors, FileDescriptor.FILE_TYPE_FLAT):
             output_file_path = self.make_output_path(output_path, file_descriptors)
             self.run_combination_session(file_descriptors, output_file_path, groups_output_directory)
         else:
-            print("Files are not all Dark files.  (Use -t option to suppress this check.)")
+            print("Files are not all Flat files.  (Use -t option to suppress this check.)")
             success = False
         return success
 
@@ -236,9 +236,9 @@ class CommandLineHandler:
             self.error_dialog("Group Directory Missing",
                               f"The specified output directory \"{exception.get_directory_name()}\""
                               f" does not exist and could not be created.")
-        except MasterMakerExceptions.NotAllDarkFrames:
-            self.error_dialog("The selected files are not all Dark Frames",
-                              "If you know the files are dark frames, they may not have proper FITS data "
+        except MasterMakerExceptions.NotAllFlatFrames:
+            self.error_dialog("The selected files are not all Flat Frames",
+                              "If you know the files are flat frames, they may not have proper FITS data "
                               "internally. Check the \"Ignore FITS file type\" box to proceed anyway.")
         except MasterMakerExceptions.IncompatibleSizes:
             self.error_dialog("The selected files can't be combined",
@@ -287,7 +287,7 @@ class CommandLineHandler:
             return output_path_parameter
 
     # Create a file name for the output file
-    #   of the form Dark-Mean-yyyymmddhhmm-temp-x-y-bin.fit
+    #   of the form Flat-Mean-yyyymmddhhmm-temp-x-y-bin.fit
     @classmethod
     def create_output_path(cls, sample_input_file: FileDescriptor,
                            combine_method: int, sigma_threshold: float, min_max_clipped: int):
@@ -314,7 +314,7 @@ class CommandLineHandler:
             method += str(sigma_threshold)
         elif combine_method == Constants.COMBINE_MINMAX:
             method += str(min_max_clipped)
-        file_name = f"DARK-{method}-{date_time_string}-{exposure}s-{temperature}C-{dimensions}-{binning}.fit"
+        file_name = f"FLAT-{method}-{date_time_string}-{exposure}s-{temperature}C-{dimensions}-{binning}.fit"
 
         return file_name
 

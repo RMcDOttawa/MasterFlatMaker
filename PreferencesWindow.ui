@@ -41,7 +41,7 @@
       </size>
      </property>
      <property name="title">
-      <string>Pre-Calibration of Dark Files</string>
+      <string>Pre-Calibration of Flat Files</string>
      </property>
      <layout class="QGridLayout" name="gridLayout_4">
       <item row="0" column="0" colspan="2">

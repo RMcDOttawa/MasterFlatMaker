@@ -36,14 +36,13 @@ class FileCombiner:
         console.message("Using single-file processing", +1)
         # We'll use the first file in the list as a sample for things like image size
         assert len(selected_files) > 0
-        # Confirm that these are all dark frames, and can be combined (same binning and dimensions)
+        # Confirm that these are all flat frames, and can be combined (same binning and dimensions)
         if FileCombiner.all_compatible_sizes(selected_files):
             self.check_cancellation()
             if data_model.get_ignore_file_type() or FileCombiner.all_of_type(selected_files,
-                                                                             FileDescriptor.FILE_TYPE_DARK):
+                                                                             FileDescriptor.FILE_TYPE_FLAT):
                 # Get (most common) filter name in the set
-                # Since these are darks, the filter is meaningless, but we need the value
-                # for the shared "create file" routine
+                # What filter should we put in the metadata for the output file?
                 filter_name = SharedUtils.most_common_filter_name(selected_files)
 
                 # Do the combination
@@ -57,7 +56,7 @@ class FileCombiner:
                                                     substituted_folder_name,
                                                     selected_files, console)
             else:
-                raise MasterMakerExceptions.NotAllDarkFrames
+                raise MasterMakerExceptions.NotAllFlatFrames
         else:
             raise MasterMakerExceptions.IncompatibleSizes
         console.message("Combining complete", 0)
@@ -151,7 +150,7 @@ class FileCombiner:
     # Process one group of files, output to the given directory
     #
     #   Exceptions thrown:
-    #       NotAllDarkFrames        The given files are not all dark frames
+    #       NotAllFlatFrames        The given files are not all flat frames
     #       IncompatibleSizes       The given files are not all the same dimensions
     
     def process_one_group(self,
@@ -172,13 +171,14 @@ class FileCombiner:
                                                       data_model.get_min_max_number_clipped_per_end())
         output_file = f"{output_directory}/{file_name}"
 
-        # Confirm that these are all dark frames, and can be combined (same binning and dimensions)
+        # Confirm that these are all flat frames, and can be combined (same binning and dimensions)
         if self.all_compatible_sizes(descriptor_list):
             if data_model.get_ignore_file_type() \
-                    or FileCombiner.all_of_type(descriptor_list, FileDescriptor.FILE_TYPE_DARK):
+                    or FileCombiner.all_of_type(descriptor_list, FileDescriptor.FILE_TYPE_FLAT):
                 # Get (most common) filter name in the set
-                # Since these are darks, the filter is meaningless, but we need the value
-                # for the shared "create file" routine
+                # Get filter name to go in the output FITS metadata.
+                # All the files should be the same filter, but in case there are stragglers,
+                # get the most common filter from the set
                 filter_name = SharedUtils.most_common_filter_name(descriptor_list)
 
                 # Do the combination
@@ -191,7 +191,7 @@ class FileCombiner:
                                                     descriptor_list, console)
                 self.check_cancellation()
             else:
-                raise MasterMakerExceptions.NotAllDarkFrames
+                raise MasterMakerExceptions.NotAllFlatFrames
         else:
             raise MasterMakerExceptions.IncompatibleSizes
         console.pop_level()
@@ -402,18 +402,18 @@ class FileCombiner:
             mean_data = ImageMath.combine_mean(file_names, calibrator, console, self._session_controller)
             self.check_cancellation()
             RmFitsUtil.create_combined_fits_file(substituted_file_name, mean_data,
-                                                 FileDescriptor.FILE_TYPE_DARK,
-                                                 "Dark Frame",
+                                                 FileDescriptor.FILE_TYPE_FLAT,
+                                                 "Flat Frame",
                                                  mean_exposure, mean_temperature, filter_name, binning,
-                                                 f"Master Dark MEAN combined {calibration_tag}")
+                                                 f"Master Flat MEAN combined {calibration_tag}")
         elif combine_method == Constants.COMBINE_MEDIAN:
             median_data = ImageMath.combine_median(file_names, calibrator, console, self._session_controller)
             self.check_cancellation()
             RmFitsUtil.create_combined_fits_file(substituted_file_name, median_data,
-                                                 FileDescriptor.FILE_TYPE_DARK,
-                                                 "Dark Frame",
+                                                 FileDescriptor.FILE_TYPE_FLAT,
+                                                 "Flat Frame",
                                                  mean_exposure, mean_temperature, filter_name, binning,
-                                                 f"Master Dark MEDIAN combined {calibration_tag}")
+                                                 f"Master Flat MEDIAN combined {calibration_tag}")
         elif combine_method == Constants.COMBINE_MINMAX:
             number_dropped_points = data_model.get_min_max_number_clipped_per_end()
             min_max_clipped_mean = ImageMath.combine_min_max_clip(file_names, number_dropped_points,
@@ -422,10 +422,10 @@ class FileCombiner:
             self.check_cancellation()
             assert min_max_clipped_mean is not None
             RmFitsUtil.create_combined_fits_file(substituted_file_name, min_max_clipped_mean,
-                                                 FileDescriptor.FILE_TYPE_DARK,
-                                                 "Dark Frame",
+                                                 FileDescriptor.FILE_TYPE_FLAT,
+                                                 "Flat Frame",
                                                  mean_exposure, mean_temperature, filter_name, binning,
-                                                 f"Master Dark Min/Max Clipped "
+                                                 f"Master Flat Min/Max Clipped "
                                                  f"(drop {number_dropped_points}) Mean combined"
                                                  f" {calibration_tag}")
         else:
@@ -436,10 +436,10 @@ class FileCombiner:
             self.check_cancellation()
             assert sigma_clipped_mean is not None
             RmFitsUtil.create_combined_fits_file(substituted_file_name, sigma_clipped_mean,
-                                                 FileDescriptor.FILE_TYPE_DARK,
-                                                 "Dark Frame",
+                                                 FileDescriptor.FILE_TYPE_FLAT,
+                                                 "Flat Frame",
                                                  mean_exposure, mean_temperature, filter_name, binning,
-                                                 f"Master Dark Sigma Clipped "
+                                                 f"Master Flat Sigma Clipped "
                                                  f"(threshold {sigma_threshold}) Mean combined"
                                                  f" {calibration_tag}")
         console.pop_level()

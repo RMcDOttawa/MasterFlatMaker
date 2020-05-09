@@ -64,9 +64,9 @@ class CombineThreadWorker(QObject):
             self.error_dialog("Group Directory Missing",
                               f"The specified output directory \"{exception.get_directory_name()}\""
                               f" does not exist and could not be created.")
-        except MasterMakerExceptions.NotAllDarkFrames:
-            self.error_dialog("The selected files are not all Dark Frames",
-                              "If you know the files are dark frames, they may not have proper FITS data "
+        except MasterMakerExceptions.NotAllFlatFrames:
+            self.error_dialog("The selected files are not all Flat Frames",
+                              "If you know the files are flat frames, they may not have proper FITS data "
                               "internally. Check the \"Ignore FITS file type\" box to proceed anyway.")
         except MasterMakerExceptions.IncompatibleSizes:
             self.error_dialog("The selected files can't be combined",

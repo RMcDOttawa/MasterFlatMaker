@@ -23,11 +23,11 @@ class NoGroupOutputDirectory(Exception):
         return self._directory_name
 
 #
-#   The selected files are not all Dark frames and "ignore type" option is not selected
+#   The selected files are not all Flat frames and "ignore type" option is not selected
 #
 
 
-class NotAllDarkFrames(Exception):
+class NotAllFlatFrames(Exception):
     pass
 
 #

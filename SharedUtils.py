@@ -150,7 +150,7 @@ class SharedUtils:
         return success
 
     # Create a file name for the output file
-    #   of the form Dark-Mean-yyyymmddhhmm-temp-x-y-bin.fit
+    #   of the form Flat-Mean-yyyymmddhhmm-temp-x-y-bin.fit
 
     @classmethod
     def create_output_path(cls, sample_input_file: FileDescriptor, combine_method: int,
@@ -179,12 +179,12 @@ class SharedUtils:
             method += str(sigma_threshold)
         elif combine_method == Constants.COMBINE_MINMAX:
             method += str(min_max_clipped)
-        file_name = f"DARK-{method}-{date_time_string}-{exposure}s-{temperature}C-{binning}.fit"
+        file_name = f"FLAT-{method}-{date_time_string}-{exposure}s-{temperature}C-{binning}.fit"
 
         return file_name
 
     # Create a suggested directory for the output files from group processing
-    #   of the form Dark-Mean-Groups-yyyymmddhhmm
+    #   of the form Flat-Mean-Groups-yyyymmddhhmm
 
     @classmethod
     def create_output_directory(cls, sample_input_file: FileDescriptor, combine_method: int):
@@ -198,7 +198,7 @@ class SharedUtils:
         method = Constants.combine_method_string(combine_method)
 
         # Make name
-        file_path = f"{directory_prefix}/DARK-{method}-Groups-{date_time_string}"
+        file_path = f"{directory_prefix}/FLAT-{method}-Groups-{date_time_string}"
         return file_path
 
     # In case the disposition directory already existed and has files in it, ensure the

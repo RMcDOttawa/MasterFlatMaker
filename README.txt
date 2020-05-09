@@ -1,17 +1,17 @@
-This program combines Dark Frames into a master dark.  If run without parameters, a GUI
+This program combines Flat Frames into a master flat.  If run without parameters, a GUI
 window opens.  If run given a list of file names as args, then those are immediately processed
 without the UI interaction.
 
 Files with same dimensions can be manually selected for combination, or you can point the program
-to a large set of files and have it automatically group them by dimensions, exposure time, and temperature
-and produce a master dark for each of the grouped sets.
+to a large set of files and have it automatically group them by dimensions, exposure, filter, and temperature
+and produce a master flat for each of the grouped sets.
 
 Preferences control how they are combined and where the result goes. You should always run the
 GUI version first, even if you intend to use the command line version, and use the Preferences
 window to establish some of the behaviours that will happen when the command line is used.
 
 Command line form:
-MasterDarkMaker --option --option ...   <list of FITs files>
+MasterFlatMaker --option --option ...   <list of FITs files>
 Options
     -g   or --gui               Force gui interface even though command line used
 
@@ -44,6 +44,6 @@ Options
 
 Examples:
 
-MasterDarkMaker --noprecal *.fits
-MasterDarkMaker -p 100 -s 2.0 *.fits
-MasterDarkMaker -a ./bias-library -ar -s 2.0 -gs -ge 5 -gt 10 -od ./output-directory ./data/*.fits
+MasterFlatMaker --noprecal *.fits
+MasterFlatMaker -p 100 -s 2.0 *.fits
+MasterFlatMaker -a ./bias-library -ar -s 2.0 -gs -ge 5 -gt 10 -od ./output-directory ./data/*.fits

@@ -6,8 +6,8 @@
 block_cipher = None
 
 
-a = Analysis(['MasterDarkMaker.py'],
-             pathex=['/Users/richard/DropBox/dropbox/EWHO/Application Development/MasterDarkMaker'],
+a = Analysis(['MasterFlatMaker.py'],
+             pathex=['/Users/richard/DropBox/dropbox/EWHO/Application Development/MasterFlatMaker'],
              binaries=[],
              datas=[('MainWindow.ui', '.'),
              ('ConsoleWindow.ui', '.'),
@@ -26,7 +26,7 @@ exe = EXE(pyz,
           a.scripts,
           [],
           exclude_binaries=True,
-          name='MasterDarkMaker',
+          name='MasterFlatMaker',
           debug=False,
           bootloader_ignore_signals=False,
           strip=False,
@@ -39,8 +39,8 @@ coll = COLLECT(exe,
                strip=False,
                upx=True,
                upx_exclude=[],
-               name='MasterDarkMaker')
+               name='MasterFlatMaker')
 app = BUNDLE(coll,
-             name='MasterDarkMaker.app',
+             name='MasterFlatMaker.app',
              icon=None,
              bundle_identifier=None)

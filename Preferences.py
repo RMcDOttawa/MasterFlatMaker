@@ -64,7 +64,7 @@ class Preferences(QSettings):
     MINIMUM_GROUP_SIZE = "minimum_group_size"
 
     def __init__(self):
-        QSettings.__init__(self, "EarwigHavenObservatory.com", "MasterDarkMaker_b")
+        QSettings.__init__(self, "EarwigHavenObservatory.com", "MasterFlatMaker_b")
         # print(f"Preferences file path: {self.fileName()}")
 
     # Getters and setters for preferences values
