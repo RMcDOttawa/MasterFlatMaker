@@ -78,6 +78,9 @@ class PreferencesWindow(QDialog):
         self.ui.temperatureGroupBandwidth.setText(f"{preferences.get_temperature_group_bandwidth()}")
         self.ui.minimumGroupSize.setText(str(preferences.get_minimum_group_size()))
 
+        # Display average ADUs
+        self.ui.displayAverageADUs.setChecked(preferences.get_display_average_adus())
+
         # Set up responders for buttons and fields
         self.ui.combineMeanRB.clicked.connect(self.combine_mean_button_clicked)
         self.ui.combineMedianRB.clicked.connect(self.combine_median_button_clicked)
@@ -102,6 +105,8 @@ class PreferencesWindow(QDialog):
 
         self.ui.autoRecursive.clicked.connect(self.auto_recursive_clicked)
         self.ui.autoBiasOnly.clicked.connect(self.auto_bias_only_clicked)
+
+        self.ui.displayAverageADUs.clicked.connect(self.display_average_adus_clicked)
 
         self.ui.closeButton.clicked.connect(self.close_button_clicked)
 
@@ -311,3 +316,7 @@ class PreferencesWindow(QDialog):
             self.sub_folder_name_changed()
 
         self.ui.close()
+
+    def display_average_adus_clicked(self):
+        self._preferences.set_display_average_adus(self.ui.displayAverageADUs.isChecked())
+        self.enableFields()

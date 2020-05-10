@@ -63,6 +63,10 @@ class Preferences(QSettings):
     IGNORE_GROUPS_FEWER_THAN = "ignore_groups_fewer_than"
     MINIMUM_GROUP_SIZE = "minimum_group_size"
 
+    # Should ADU values for FITS files be displayed in the main window (slows down processing
+    # since every file has to be read in its entirety to populate the window)
+    DISPLAY_AVERAGE_ADUS = "display_average_adus"
+
     def __init__(self):
         QSettings.__init__(self, "EarwigHavenObservatory.com", "MasterFlatMaker_b")
         # print(f"Preferences file path: {self.fileName()}")
@@ -273,3 +277,12 @@ class Preferences(QSettings):
 
     def set_minimum_group_size(self, value: int):
         self.setValue(self.MINIMUM_GROUP_SIZE, value)
+
+    # Should ADU values for FITS files be displayed in the main window (slows down processing
+    # since every file has to be read in its entirety to populate the window)
+
+    def get_display_average_adus(self) -> bool:
+        return bool(self.value(self.DISPLAY_AVERAGE_ADUS, defaultValue=False))
+
+    def set_display_average_adus(self, display: bool):
+        self.setValue(self.DISPLAY_AVERAGE_ADUS, display)
