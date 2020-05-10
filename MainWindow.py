@@ -744,8 +744,7 @@ class MainWindow(QMainWindow):
         self._table_model.adu_display_changed(self._data_model.get_display_average_adus())
 
     def get_adu_values_for_descriptors(self, descriptors: [FileDescriptor]):
-        print("get_adu_values_for_descriptors")
-        # todo fill in adus for file descriptors
-        d: FileDescriptor
-        for d in descriptors:
-            d.set_average_adus(random.randrange(15000, 30000))
+        for descriptor in descriptors:
+            path = descriptor.get_absolute_path()
+            adus = RmFitsUtil.get_average_adus(path)
+            descriptor.set_average_adus(adus)
