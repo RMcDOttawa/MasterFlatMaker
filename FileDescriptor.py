@@ -12,14 +12,15 @@ class FileDescriptor:
     FILE_TYPE_FLAT = 4
 
     def __init__(self, absolute_path: str):
-        self._absolute_path = absolute_path
-        self._type = self.FILE_TYPE_UNKNOWN
-        self._binning = 0
-        self._x_size = 0
-        self._y_size = 0
-        self._filter_name = "(unknown)"
-        self._exposure = 0.0
-        self._temperature = 0.0
+        self._absolute_path: str = absolute_path
+        self._type: int = self.FILE_TYPE_UNKNOWN
+        self._binning: int = 0
+        self._x_size: int = 0
+        self._y_size: int = 0
+        self._filter_name: str = "(unknown)"
+        self._exposure: float = 0.0
+        self._temperature: float = 0.0
+        self._average_adus: int = -1    # -1 is "not set" value
 
     def get_absolute_path(self) -> str:
         return self._absolute_path
@@ -95,6 +96,12 @@ class FileDescriptor:
 
     def set_temperature(self, temperature: float):
         self._temperature = temperature
+
+    def get_average_adus(self) -> int:
+        return self._average_adus
+
+    def set_average_adus(self, adus: int):
+        self._average_adus = adus
 
     def __str__(self) -> str:
         return f"{self.get_name()}: {self._binning} {self._exposure} {self._temperature}"

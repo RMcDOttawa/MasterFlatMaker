@@ -4,6 +4,7 @@
 #
 
 import os
+import random
 
 import PyQt5
 from PyQt5 import uic
@@ -36,6 +37,7 @@ class MainWindow(QMainWindow):
         self._field_validity: {object, bool} = {}
         self._table_model: FitsFileTableModel
         self._indent_level = 0
+        self._adu_values_known = False
 
         # Load algorithm from preferences
 
@@ -93,8 +95,13 @@ class MainWindow(QMainWindow):
         self.ui.temperatureGroupBandwidth.setText(f"{data_model.get_temperature_group_bandwidth()}")
         self.ui.minimumGroupSize.setText(str(data_model.get_minimum_group_size()))
 
+        # Display average ADUs
+
+        self.ui.displayAvgADUs.setChecked(data_model.get_display_average_adus())
+
         # Set up the file table
-        self._table_model = FitsFileTableModel(self.ui.filesTable, data_model.get_ignore_file_type())
+        self._table_model = FitsFileTableModel(self.ui.filesTable, data_model.get_ignore_file_type(),
+                                               preferences.get_display_average_adus())
         self.ui.filesTable.setModel(self._table_model)
         # Columns should resize to best fit their contents
         self.ui.filesTable.horizontalHeader().setSectionResizeMode(QHeaderView.ResizeToContents)
@@ -174,6 +181,9 @@ class MainWindow(QMainWindow):
         self.ui.exposureGroupBandwidth.editingFinished.connect(self.exposure_group_bandwidth_changed)
         self.ui.temperatureGroupBandwidth.editingFinished.connect(self.temperature_group_bandwidth_changed)
         self.ui.minimumGroupSize.editingFinished.connect(self.minimum_group_size_changed)
+
+        # Display average ADUs
+        self.ui.displayAvgADUs.clicked.connect(self.display_average_adus_clicked)
 
         # Tiny fonts in path display fields
         tiny_font = self.ui.precalibrationPathDisplay.font()
@@ -396,6 +406,11 @@ class MainWindow(QMainWindow):
         else:
             try:
                 file_descriptions = RmFitsUtil.make_file_descriptions(file_names)
+                if self._data_model.get_display_average_adus():
+                    self.get_adu_values_for_descriptors(file_descriptions)
+                    self._adu_values_known = True
+                else:
+                    self._adu_values_known = False
                 self._table_model.set_file_descriptors(file_descriptions)
                 self._table_model.sort(0, PyQt5.QtCore.Qt.AscendingOrder)  # Column 0, ascending order
             except FileNotFoundError as exception:
@@ -709,3 +724,28 @@ class MainWindow(QMainWindow):
 
     def remove_from_ui(self, path_to_remove: str):
         self._table_model.remove_file_path(path_to_remove)
+
+    #   Display Average ADUs clicked.  Change the setting and re-display the table
+    #   If we're turning this feature "on" we may need to re-read the files if they've never
+    #   been read for the ADU values
+
+    def display_average_adus_clicked(self):
+        self._data_model.set_display_average_adus(self.ui.displayAvgADUs.isChecked())
+        # If we just turned this feature "on" we need to ensure the ADU values are known
+        if self._data_model.get_display_average_adus():
+            if self._adu_values_known:
+                # We already know the ADU values for these files (previously read)
+                # so no need to re-read them
+                pass
+            else:
+                self.get_adu_values_for_descriptors(self._table_model.get_file_descriptors())
+                self._adu_values_known = True
+        # Then, in either case, we must re-display the table
+        self._table_model.adu_display_changed(self._data_model.get_display_average_adus())
+
+    def get_adu_values_for_descriptors(self, descriptors: [FileDescriptor]):
+        print("get_adu_values_for_descriptors")
+        # todo fill in adus for file descriptors
+        d: FileDescriptor
+        for d in descriptors:
+            d.set_average_adus(random.randrange(15000, 30000))

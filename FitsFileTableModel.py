@@ -19,19 +19,20 @@ from FileDescriptor import FileDescriptor
 
 
 class FitsFileTableModel(QAbstractTableModel):
-    headings = ["Name", "Type", "Filter", "Dimensions", "Binning", "Exp.", "Temp."]
+    headings = ["Name", "Type", "Filter", "Dimensions", "Binning", "Exp.", "Temp.", "Avg ADUs"]
 
-    def __init__(self, table: QTableView, ignore_file_type: bool):
+    def __init__(self, table: QTableView, ignore_file_type: bool, display_average_adus: bool):
         """Constructor for empty fits file table model"""
         QAbstractTableModel.__init__(self)
         self._files_list: [FileDescriptor] = []
         self._ignore_file_type = ignore_file_type
         self._table = table
+        self._display_average_adus = display_average_adus
 
     def set_ignore_file_type(self, ignore: bool):
         self._ignore_file_type = ignore
 
-    def get_file_descriptors(self):
+    def get_file_descriptors(self) -> [FileDescriptor]:
         return self._files_list
 
     def set_file_descriptors(self, file_descriptors: [FileDescriptor]):
@@ -47,7 +48,7 @@ class FitsFileTableModel(QAbstractTableModel):
     # Return how many columns to display
     # noinspection PyMethodOverriding
     def columnCount(self, parent: QModelIndex) -> int:
-        return len(self.headings)
+        return len(self.headings) if self._display_average_adus else len(self.headings) - 1
 
     # Get data element to display in a table cell
     # noinspection PyMethodOverriding
@@ -72,6 +73,8 @@ class FitsFileTableModel(QAbstractTableModel):
                 result = f"{descriptor.get_exposure():.3f}"
             elif column_index == 6:
                 result = str(descriptor.get_temperature())
+            elif column_index == 7:
+                result = f"{descriptor.get_average_adus():,}"
             else:
                 result = f"<{row_index},{column_index}>"
         # elif role == Qt.FontRole:
@@ -127,6 +130,10 @@ class FitsFileTableModel(QAbstractTableModel):
             self._files_list = sorted(self._files_list,
                                       key=FileDescriptor.get_temperature,
                                       reverse=reverse_flag)
+        elif column_index == 7:
+            self._files_list = sorted(self._files_list,
+                                      key=FileDescriptor.get_average_adus,
+                                      reverse=reverse_flag)
         self.endResetModel()
         self._table.clearSelection()
 
@@ -178,5 +185,11 @@ class FitsFileTableModel(QAbstractTableModel):
                 del self._files_list[row_index]
                 self.endRemoveRows()
                 break
+
+    # Take note of the fact that the "display average adus" flag has changed, update appropriately
+    def adu_display_changed(self, display: bool):
+        self.beginResetModel()
+        self._display_average_adus = display
+        self.endResetModel()
 
 

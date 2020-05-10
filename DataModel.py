@@ -35,6 +35,7 @@ class DataModel:
         self._ignore_file_type: bool = False
         self._ignore_groups_fewer_than: bool = preferences.get_ignore_groups_fewer_than()
         self._minimum_group_size: int = preferences.get_minimum_group_size()
+        self._display_average_adus: bool = preferences.get_display_average_adus()
 
     def get_master_combine_method(self) -> int:
         result = self._master_combine_method
@@ -208,3 +209,9 @@ class DataModel:
 
     def set_minimum_group_size(self, minimum: int):
         self._minimum_group_size = minimum
+
+    def get_display_average_adus(self) -> bool:
+        return self._display_average_adus
+
+    def set_display_average_adus(self, display: bool):
+        self._display_average_adus = display
