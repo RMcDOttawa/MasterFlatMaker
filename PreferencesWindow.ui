@@ -74,7 +74,7 @@
       <item row="2" column="0" colspan="3">
        <widget class="QRadioButton" name="autoPreCalibrationRB">
         <property name="toolTip">
-         <string>Automatically choose a matching Bias file from a directory of Bias files</string>
+         <string>Automatically choose a matching Bias or Flat file from a directory of Bias files</string>
         </property>
         <property name="text">
          <string>Automatic File from Directory</string>
@@ -149,7 +149,7 @@
       <item row="4" column="1">
        <widget class="QCheckBox" name="autoBiasOnly">
         <property name="text">
-         <string>Bias files only</string>
+         <string>Bias &amp;&amp; Flat files only</string>
         </property>
        </widget>
       </item>
@@ -185,7 +185,7 @@
          <string>Use fixed bias file specified here for precalibration</string>
         </property>
         <property name="text">
-         <string>Fixed Bias File:</string>
+         <string>Fixed Bias or Flat File:</string>
         </property>
        </widget>
       </item>
@@ -537,7 +537,7 @@
  <resources/>
  <connections/>
  <buttongroups>
-  <buttongroup name="dispositionGroup"/>
   <buttongroup name="combineMethodGroup"/>
+  <buttongroup name="dispositionGroup"/>
  </buttongroups>
 </ui>

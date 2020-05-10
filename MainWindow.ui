@@ -356,7 +356,7 @@
            </size>
           </property>
           <property name="title">
-           <string>Pre-Combine Bias File Calibration</string>
+           <string>Pre-Combine Bias/Flat File Calibration</string>
           </property>
           <layout class="QGridLayout" name="gridLayout">
            <item row="0" column="0" colspan="2">
@@ -391,7 +391,7 @@
            <item row="2" column="0" colspan="2">
             <widget class="QRadioButton" name="autoPreCalibrationRB">
              <property name="toolTip">
-              <string>Automatically choose a matching Bias file from a directory of Bias files</string>
+              <string>Automatically choose a matching Bias or Flat file from a directory of files</string>
              </property>
              <property name="text">
               <string>Auto from Directory</string>
@@ -469,10 +469,10 @@
            <item row="4" column="1" colspan="2">
             <widget class="QCheckBox" name="autoBiasOnly">
              <property name="toolTip">
-              <string>In auto directory, only BIAS files will be considered</string>
+              <string>In auto directory, only BIAS or FLAT files will be considered</string>
              </property>
              <property name="text">
-              <string>Bias files only</string>
+              <string>Bias &amp;&amp; Flat files only</string>
              </property>
             </widget>
            </item>
@@ -492,10 +492,10 @@
            <item row="6" column="0" colspan="2">
             <widget class="QRadioButton" name="fixedPreCalFileRB">
              <property name="toolTip">
-              <string>Use fixed bias file specified here for precalibration</string>
+              <string>Use fixed bias or flat file specified here for precalibration</string>
              </property>
              <property name="text">
-              <string>Fixed Bias File:</string>
+              <string>Fixed Bias/Flat File:</string>
              </property>
              <attribute name="buttonGroup">
               <string notr="true">preCalibrationGroup</string>
@@ -689,6 +689,9 @@
            </item>
            <item row="4" column="0" colspan="3">
             <widget class="QCheckBox" name="ignoreFileType">
+             <property name="toolTip">
+              <string>Allow any FITS file to be included, not just FLAT files.</string>
+             </property>
              <property name="text">
               <string>Ignore FITS file type, allow combine</string>
              </property>
@@ -987,7 +990,7 @@
  <resources/>
  <connections/>
  <buttongroups>
-  <buttongroup name="dispositionGroup"/>
   <buttongroup name="preCalibrationGroup"/>
+  <buttongroup name="dispositionGroup"/>
  </buttongroups>
 </ui>

@@ -11,14 +11,15 @@ from FileDescriptor import FileDescriptor
 #   Columns in the table are:
 #       0:  Name            Name of the file
 #       1:  Type            Image type (Dark, Light, Bias, Flat, Unknown)
-#       2:  Dimensions      Width, Height of image in pixels
-#       3:  Binning         The binning value (1x1, 2x2, etc., or Unknown)
-#       4:  Filter          Name of filter if light or flat frame
-#       5:  Exposure        Exposure time of frame in seconds
+#       2:  Filter          Name of filter used for this frame
+#       3:  Dimensions      Width, Height of image in pixels
+#       4:  Binning         The binning value (1x1, 2x2, etc., or Unknown)
+#       5:  Filter          Name of filter if light or flat frame
+#       6:  Exposure        Exposure time of frame in seconds
 
 
 class FitsFileTableModel(QAbstractTableModel):
-    headings = ["Name", "Type", "Dimensions", "Binning", "Exp.", "Temp."]
+    headings = ["Name", "Type", "Filter", "Dimensions", "Binning", "Exp.", "Temp."]
 
     def __init__(self, table: QTableView, ignore_file_type: bool):
         """Constructor for empty fits file table model"""
@@ -60,14 +61,16 @@ class FitsFileTableModel(QAbstractTableModel):
             elif column_index == 1:
                 result = descriptor.get_type_name()
             elif column_index == 2:
+                result = descriptor.get_filter_name()
+            elif column_index == 3:
                 (x_size, y_size) = descriptor.get_dimensions()
                 result = f"{x_size} x {y_size}"
-            elif column_index == 3:
+            elif column_index == 4:
                 binning = descriptor.get_binning()
                 result = f"{binning} x {binning}"
-            elif column_index == 4:
-                result = f"{descriptor.get_exposure():.3f}"
             elif column_index == 5:
+                result = f"{descriptor.get_exposure():.3f}"
+            elif column_index == 6:
                 result = str(descriptor.get_temperature())
             else:
                 result = f"<{row_index},{column_index}>"
@@ -106,17 +109,21 @@ class FitsFileTableModel(QAbstractTableModel):
                                       reverse=reverse_flag)
         elif column_index == 2:
             self._files_list = sorted(self._files_list,
-                                      key=FileDescriptor.get_x_dimension,
+                                      key=FileDescriptor.get_filter_name_lower,
                                       reverse=reverse_flag)
         elif column_index == 3:
             self._files_list = sorted(self._files_list,
-                                      key=FileDescriptor.get_binning,
+                                      key=FileDescriptor.get_x_dimension,
                                       reverse=reverse_flag)
         elif column_index == 4:
             self._files_list = sorted(self._files_list,
-                                      key=FileDescriptor.get_exposure,
+                                      key=FileDescriptor.get_binning,
                                       reverse=reverse_flag)
         elif column_index == 5:
+            self._files_list = sorted(self._files_list,
+                                      key=FileDescriptor.get_exposure,
+                                      reverse=reverse_flag)
+        elif column_index == 6:
             self._files_list = sorted(self._files_list,
                                       key=FileDescriptor.get_temperature,
                                       reverse=reverse_flag)

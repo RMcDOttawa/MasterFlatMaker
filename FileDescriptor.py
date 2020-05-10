@@ -77,6 +77,10 @@ class FileDescriptor:
     def get_filter_name(self) -> str:
         return self._filter_name
 
+    # Filter name in all lower-case to facilitate case insensitive comparisons
+    def get_filter_name_lower(self) -> str:
+        return self._filter_name.lower()
+
     def set_filter_name(self, name: str):
         self._filter_name = name
 
