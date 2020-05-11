@@ -388,7 +388,7 @@
            <item row="2" column="0" colspan="2">
             <widget class="QRadioButton" name="autoPreCalibrationRB">
              <property name="toolTip">
-              <string>Automatically choose a matching Bias or Flat file from a directory of files</string>
+              <string>Automatically choose the best matching Bias or Flat file from a directory of files</string>
              </property>
              <property name="text">
               <string>Auto from Directory</string>

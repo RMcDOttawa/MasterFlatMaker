@@ -77,7 +77,7 @@
          <string>Automatically choose a matching Bias or Flat file from a directory of Bias files</string>
         </property>
         <property name="text">
-         <string>Automatic File from Directory</string>
+         <string>Best Bias or Flat from Directory</string>
         </property>
        </widget>
       </item>
@@ -544,7 +544,7 @@
  <resources/>
  <connections/>
  <buttongroups>
-  <buttongroup name="dispositionGroup"/>
   <buttongroup name="combineMethodGroup"/>
+  <buttongroup name="dispositionGroup"/>
  </buttongroups>
 </ui>

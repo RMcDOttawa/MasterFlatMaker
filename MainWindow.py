@@ -672,8 +672,8 @@ class MainWindow(QMainWindow):
             if self._data_model.get_auto_directory_recursive():
                 precal_parts.append("Recursive")
             if self._data_model.get_auto_directory_bias_only():
-                precal_parts.append("Bias")
-            precal_type_string = ", ".join(precal_parts)
+                precal_parts.append("Bias/Flat")
+            precal_type_string = ",".join(precal_parts)
             precal_option_2 = os.path.basename(self._data_model.get_precalibration_auto_directory())
         elif precal_type == Constants.CALIBRATION_PEDESTAL:
             precal_type_string += f" {self._data_model.get_precalibration_pedestal()}"

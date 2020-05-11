@@ -31,12 +31,12 @@ class ImageMath:
         assert len(file_names) > 0  # Otherwise the combine button would have been disabled
         console.push_level()
         console.message("Combining by simple mean", +1)
-        sample_file = RmFitsUtil.make_file_descriptor(file_names[0])
+        descriptors = RmFitsUtil.make_file_descriptions(file_names)
         file_data: [ndarray]
         file_data = RmFitsUtil.read_all_files_data(file_names)
 
         cls.check_cancellation(session_controller)
-        calibrated_data = calibrator.calibrate_images(file_data, sample_file, console, session_controller)
+        calibrated_data = calibrator.calibrate_images(file_data, descriptors, console, session_controller)
 
         cls.check_cancellation(session_controller)
         mean_result = numpy.mean(calibrated_data, axis=0)
@@ -537,12 +537,12 @@ class ImageMath:
                            session_controller: SessionController) -> Optional[ndarray]:
         console.push_level()
         console.message(f"Combine by sigma-clipped mean, z-score threshold {sigma_threshold}", +1)
-        sample_file = RmFitsUtil.make_file_descriptor(file_names[0])
 
+        descriptors = RmFitsUtil.make_file_descriptions(file_names)
         file_data = numpy.asarray(RmFitsUtil.read_all_files_data(file_names))
         cls.check_cancellation(session_controller)
 
-        file_data = calibrator.calibrate_images(file_data, sample_file, console, session_controller)
+        file_data = calibrator.calibrate_images(file_data, descriptors, console, session_controller)
         cls.check_cancellation(session_controller)
 
         console.message("Calculating unclipped means", +1)
@@ -615,10 +615,10 @@ class ImageMath:
         assert len(file_names) > 0  # Otherwise the combine button would have been disabled
         console.push_level()
         console.message("Combine by simple Median", +1)
+        descriptors = RmFitsUtil.make_file_descriptions(file_names)
         file_data = RmFitsUtil.read_all_files_data(file_names)
         cls.check_cancellation(session_controller)
-        sample_file = RmFitsUtil.make_file_descriptor(file_names[0])
-        file_data = calibrator.calibrate_images(file_data, sample_file, console, session_controller)
+        file_data = calibrator.calibrate_images(file_data, descriptors, console, session_controller)
         cls.check_cancellation(session_controller)
         median_result = numpy.median(file_data, axis=0)
         console.pop_level()
@@ -675,9 +675,9 @@ class ImageMath:
         # Get the data to be processed
         file_data_list: [ndarray] = RmFitsUtil.read_all_files_data(file_names)
         cls.check_cancellation(session_controller)
+        descriptors = RmFitsUtil.make_file_descriptions(file_names)
         file_data = numpy.asarray(file_data_list)
-        sample_file = RmFitsUtil.make_file_descriptor(file_names[0])
-        file_data = calibrator.calibrate_images(file_data, sample_file, console, session_controller)
+        file_data = calibrator.calibrate_images(file_data, descriptors, console, session_controller)
         cls.check_cancellation(session_controller)
         # Do the math using each algorithm, and display how long it takes
 
