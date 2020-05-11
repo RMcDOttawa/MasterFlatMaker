@@ -4,6 +4,7 @@
 import sys
 from typing import Optional
 
+import numpy
 from numpy import ndarray
 
 import MasterMakerExceptions
@@ -101,6 +102,7 @@ class Calibrator:
             # No files in that directory, raise exception
             raise MasterMakerExceptions.AutoCalibrationDirectoryEmpty(auto_directory_path)
 
+        console.message(f"Calibrating from directory containing {len(directory_files)} files.", +1)
         result = file_data.copy()
         for input_index in range(len(descriptors)):
             if session_controller.thread_cancelled():
@@ -108,7 +110,7 @@ class Calibrator:
             this_file: FileDescriptor = descriptors[input_index]
             calibration_file = self.get_best_calibration_file(directory_files,
                                                               this_file,
-                                                              session_controller)
+                                                              session_controller, console)
             if session_controller.thread_cancelled():
                 raise MasterMakerExceptions.SessionCancelled
             calibration_image = RmFitsUtil.fits_data_from_path(calibration_file)
@@ -129,7 +131,8 @@ class Calibrator:
     #       NoSuitableAutoBias
 
     def get_best_calibration_file(self, directory_files, sample_file: FileDescriptor,
-                                  session_controller: SessionController) -> Optional[str]:
+                                  session_controller: SessionController,
+                                  console: Console) -> Optional[str]:
         # Filter to Bias or Dark files if option and give exception if none
         if self._data_model.get_auto_directory_bias_only():
             all_descriptors = list((d for d in directory_files
@@ -151,7 +154,8 @@ class Calibrator:
         # From the correct-sized files, find the one closest to the sample file temperature and exposure
         closest_match = self.closest_match(correct_size_files,
                                            sample_file.get_exposure(),
-                                           sample_file.get_temperature())
+                                           sample_file.get_temperature(),
+                                           console)
         return closest_match.get_absolute_path()
 
     def all_descriptors_from_directory(self, directory_path: str,
@@ -176,11 +180,28 @@ class Calibrator:
     # in a given directory.  We try to match both the exposure time and the temperature,
     # giving more weight to the exposure time.
     def closest_match(self, descriptors: [FileDescriptor],
-                                  target_exposure: float,
-                                  target_temperature: float) -> FileDescriptor:
-        # todo closest_match
-        print("closest_match stub")
-        return descriptors[0]
+                      target_exposure: float,
+                      target_temperature: float,
+                      console: Console) -> FileDescriptor:
+        # Assign a score to each possible calibration file, based on exposure and temperature
+        f: FileDescriptor
+        file_temperatures = numpy.array([f.get_temperature() for f in descriptors])
+        file_exposures = numpy.array([f.get_exposure() for f in descriptors])
+        scores = numpy.abs(file_temperatures - target_temperature) \
+                 + numpy.abs(file_exposures - target_exposure) * Constants.AUTO_CALIBRATION_EXPOSURE_WEIGHT
+        # The smallest score is the best choice
+        minimum_score = numpy.min(scores)
+        indices = numpy.where(scores == minimum_score)
+        assert len(indices) > 0  # Min was from the list, so there must be at least one
+        match_index = indices[0].tolist()[0]
+        best_match = descriptors[match_index]
+
+        console.message(f"Target {target_exposure:.1f}s at {target_temperature:.1f} C,"
+                        f" best match is {best_match.get_exposure():.1f}s at"
+                        f" {best_match.get_temperature():.1f} C", +1, temp=True)
+
+        return best_match
+
 
     # Get a small text tag about calibration to include in the FITs file comment
 

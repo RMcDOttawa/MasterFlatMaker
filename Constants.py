@@ -25,6 +25,9 @@ class Constants:
 
     CONSOLE_INDENTATION_SIZE = 5
 
+    # Weight given to exposure time over temperature when selecting a calibration file
+    AUTO_CALIBRATION_EXPOSURE_WEIGHT = 3.0
+
     @classmethod
     def combine_method_string(cls, method: int) -> str:
         if method == cls.COMBINE_MEAN:
