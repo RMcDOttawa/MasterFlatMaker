@@ -12,6 +12,7 @@
       <w>flatnotmasked</w>
       <w>groupby</w>
       <w>groupexposure</w>
+      <w>groupfilter</w>
       <w>groupsize</w>
       <w>grouptemperature</w>
       <w>hdul</w>

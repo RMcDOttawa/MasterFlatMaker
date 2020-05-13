@@ -144,13 +144,16 @@ class CommandLineHandler:
             print(f"   Output path: {args.output}")
             output_path = args.output
 
-        # Grouping   gs   gt <threshold>   mg <minimum>
+        # Grouping   gs   gf   gt <threshold>   mg <minimum>
         #   -   If -ge used, bandwidth is 0.1 to 50
         #   -   If -gt used, bandwidth is 0.1 to 50
         #   -   If -mg used, group size is > 0
         if args.groupsize:
             print("   Group files by size")
             self._data_model.set_group_by_size(True)
+        if args.groupfilter:
+            print("   Group files by filter name")
+            self._data_model.set_group_by_filter(True)
         if args.grouptemperature is not None:
             self._data_model.set_group_by_temperature(True)
             bandwidth = float(args.grouptemperature)
@@ -171,7 +174,9 @@ class CommandLineHandler:
                 valid = False
 
         # If any of the grouping options are in use, then the output directory is mandatory
-        if self._data_model.get_group_by_temperature() or self._data_model.get_group_by_size():
+        if self._data_model.get_group_by_filter() \
+                or self._data_model.get_group_by_temperature() \
+                or self._data_model.get_group_by_size():
             if args.outputdirectory is None:
                 print("If any of the group-by options are used, then the output directory option is mandatory")
                 valid = False
@@ -209,7 +214,9 @@ class CommandLineHandler:
         # Do the file combination - two methods depending on whether we are processing by groups
         try:
             # Are we using grouped processing?
-            if self._data_model.get_group_by_size() or self._data_model.get_group_by_temperature():
+            if self._data_model.get_group_by_filter() \
+                    or self._data_model.get_group_by_size() \
+                    or self._data_model.get_group_by_temperature():
                 file_combiner.process_groups(self._data_model, descriptors,
                                              output_directory,
                                              console)
@@ -294,14 +301,14 @@ class CommandLineHandler:
         now = datetime.now()
         date_time_string = now.strftime("%Y%m%d-%H%M%S")
         temperature = f"{sample_input_file.get_temperature():.1f}"
-        dimensions = f"{sample_input_file.get_x_dimension()}x{sample_input_file.get_y_dimension()}"
+        filter_name = sample_input_file.get_filter_name()
         binning = f"{sample_input_file.get_binning()}x{sample_input_file.get_binning()}"
         method = Constants.combine_method_string(combine_method)
         if combine_method == Constants.COMBINE_SIGMA_CLIP:
             method += str(sigma_threshold)
         elif combine_method == Constants.COMBINE_MINMAX:
             method += str(min_max_clipped)
-        file_name = f"FLAT-{method}-{date_time_string}-{temperature}C-{dimensions}-{binning}.fit"
+        file_name = f"FLAT-{filter_name}-{binning}-{method}-{date_time_string}-{temperature}C.fit"
 
         return file_name
 
