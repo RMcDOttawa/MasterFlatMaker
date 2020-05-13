@@ -292,7 +292,7 @@ class CommandLineHandler:
                               sigma_threshold, min_max_clipped):
         # Get other components of name
         now = datetime.now()
-        date_time_string = now.strftime("%Y%m%d-%H%M")
+        date_time_string = now.strftime("%Y%m%d-%H%M%S")
         temperature = f"{sample_input_file.get_temperature():.1f}"
         dimensions = f"{sample_input_file.get_x_dimension()}x{sample_input_file.get_y_dimension()}"
         binning = f"{sample_input_file.get_binning()}x{sample_input_file.get_binning()}"
