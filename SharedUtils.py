@@ -174,11 +174,12 @@ class SharedUtils:
         # Removed dimensions from file name - cluttered and not needed with binning included
         binning = f"{sample_input_file.get_binning()}x{sample_input_file.get_binning()}"
         method = Constants.combine_method_string(combine_method)
+        filter_name = sample_input_file.get_filter_name()
         if combine_method == Constants.COMBINE_SIGMA_CLIP:
             method += str(sigma_threshold)
         elif combine_method == Constants.COMBINE_MINMAX:
             method += str(min_max_clipped)
-        file_name = f"FLAT-{method}-{date_time_string}-{temperature}C-{binning}.fit"
+        file_name = f"FLAT-{filter_name}-{binning}-{method}-{date_time_string}-{temperature}C.fit"
 
         return file_name
 
