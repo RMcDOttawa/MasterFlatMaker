@@ -29,6 +29,7 @@ class DataModel:
         self._auto_directory_bias_only: bool = preferences.get_auto_directory_bias_only()
         self._group_by_size: bool = preferences.get_group_by_size()
         self._group_by_temperature: bool = preferences.get_group_by_temperature()
+        self._group_by_filter: bool = preferences.get_group_by_filter()
         self._temperature_group_bandwidth: float = preferences.get_temperature_group_bandwidth()
         self._ignore_file_type: bool = False
         self._ignore_groups_fewer_than: bool = preferences.get_ignore_groups_fewer_than()
@@ -149,6 +150,12 @@ class DataModel:
 
     def set_group_by_temperature(self, is_grouped: bool):
         self._group_by_temperature = is_grouped
+
+    def get_group_by_filter(self) -> bool:
+        return self._group_by_filter
+
+    def set_group_by_filter(self, is_grouped: bool):
+        self._group_by_filter = is_grouped
 
     def get_auto_directory_recursive(self) -> bool:
         return self._auto_directory_recursive

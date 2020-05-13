@@ -88,6 +88,7 @@ class MainWindow(QMainWindow):
 
         self.ui.groupBySizeCB.setChecked(data_model.get_group_by_size())
         self.ui.groupByTemperatureCB.setChecked(data_model.get_group_by_temperature())
+        self.ui.groupByFilterCB.setChecked(data_model.get_group_by_filter())
         self.ui.ignoreSmallGroupsCB.setChecked(data_model.get_ignore_groups_fewer_than())
 
         self.ui.temperatureGroupBandwidth.setText(f"{data_model.get_temperature_group_bandwidth()}")
@@ -174,6 +175,7 @@ class MainWindow(QMainWindow):
         # Grouping controls
         self.ui.groupBySizeCB.clicked.connect(self.group_by_size_clicked)
         self.ui.groupByTemperatureCB.clicked.connect(self.group_by_temperature_clicked)
+        self.ui.groupByFilterCB.clicked.connect(self.group_by_filter_clicked)
         self.ui.ignoreSmallGroupsCB.clicked.connect(self.ignore_small_groups_clicked)
         self.ui.temperatureGroupBandwidth.editingFinished.connect(self.temperature_group_bandwidth_changed)
         self.ui.minimumGroupSize.editingFinished.connect(self.minimum_group_size_changed)
@@ -253,6 +255,11 @@ class MainWindow(QMainWindow):
 
     def group_by_temperature_clicked(self):
         self._data_model.set_group_by_temperature(self.ui.groupByTemperatureCB.isChecked())
+        self.enable_fields()
+        self.enable_buttons()
+
+    def group_by_filter_clicked(self):
+        self._data_model.set_group_by_filter(self.ui.groupByFilterCB.isChecked())
         self.enable_fields()
         self.enable_buttons()
 
@@ -624,7 +631,9 @@ class MainWindow(QMainWindow):
     #
 
     def get_appropriate_output_path(self, sample_file: FileDescriptor):
-        if self._data_model.get_group_by_size() or self._data_model.get_group_by_temperature():
+        if self._data_model.get_group_by_size() \
+                or self._data_model.get_group_by_temperature() \
+                or self._data_model.get_group_by_filter():
             return self.get_group_output_directory()
         else:
             path = SharedUtils.create_output_path(sample_file, self._data_model.get_master_combine_method(),
@@ -677,6 +686,8 @@ class MainWindow(QMainWindow):
             group_parts.append("Size")
         if self._data_model.get_group_by_temperature():
             group_parts.append("Temp")
+        if self._data_model.get_group_by_filter():
+            group_parts.append("Filter")
         if self._data_model.get_ignore_groups_fewer_than():
             ignore = f"Min group size {self._data_model.get_minimum_group_size()}"
         else:

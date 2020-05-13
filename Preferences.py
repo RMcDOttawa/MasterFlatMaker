@@ -51,6 +51,7 @@ class Preferences(QSettings):
     # Are we processing multiple file sets at once using grouping?
     GROUP_BY_SIZE = "group_by_size"
     GROUP_BY_TEMPERATURE = "group_by_temperature"
+    GROUP_BY_FILTER = "group_by_filter"
 
     # How much, as a percentage, can temperatures vary before being considered a different group?
     TEMPERATURE_GROUP_BANDWIDTH = "temperature_group_bandwidth"
@@ -231,6 +232,12 @@ class Preferences(QSettings):
 
     def set_group_by_temperature(self, is_grouped: bool):
         self.setValue(self.GROUP_BY_TEMPERATURE, is_grouped)
+
+    def get_group_by_filter(self) -> bool:
+        return bool(self.value(self.GROUP_BY_FILTER, defaultValue=False))
+
+    def set_group_by_filter(self, is_grouped: bool):
+        self.setValue(self.GROUP_BY_FILTER, is_grouped)
 
     # Bandwidth to use for clustering temperatures into groups
 

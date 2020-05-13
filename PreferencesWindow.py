@@ -71,6 +71,7 @@ class PreferencesWindow(QDialog):
         # Grouping information
         self.ui.groupBySizeCB.setChecked(preferences.get_group_by_size())
         self.ui.groupByTemperatureCB.setChecked(preferences.get_group_by_temperature())
+        self.ui.groupByFilterCB.setChecked(preferences.get_group_by_filter())
         self.ui.ignoreSmallGroupsCB.setChecked(preferences.get_ignore_groups_fewer_than())
 
         self.ui.temperatureGroupBandwidth.setText(f"{preferences.get_temperature_group_bandwidth()}")
@@ -98,6 +99,7 @@ class PreferencesWindow(QDialog):
 
         self.ui.groupBySizeCB.clicked.connect(self.group_by_size_clicked)
         self.ui.groupByTemperatureCB.clicked.connect(self.group_by_temperature_clicked)
+        self.ui.groupByFilterCB.clicked.connect(self.group_by_filter_clicked)
         self.ui.ignoreSmallGroupsCB.clicked.connect(self.ignore_small_groups_clicked)
 
         self.ui.autoRecursive.clicked.connect(self.auto_recursive_clicked)
@@ -129,6 +131,10 @@ class PreferencesWindow(QDialog):
 
     def group_by_temperature_clicked(self):
         self._preferences.set_group_by_temperature(self.ui.groupByTemperatureCB.isChecked())
+        self.enableFields()
+
+    def group_by_filter_clicked(self):
+        self._preferences.set_group_by_filter(self.ui.groupByFilterCB.isChecked())
         self.enableFields()
 
     def auto_recursive_clicked(self):
