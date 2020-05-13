@@ -48,8 +48,6 @@ method_arg_group.add_argument("-s", "--sigma", type=float, metavar="<z threshold
 # Grouping
 arg_parser.add_argument("-gs", "--groupsize", action="store_true",
                         help="Group files by size (dimensions and binning)")
-arg_parser.add_argument("-ge", "--groupexposure", type=float, metavar="<Bandwidth>",
-                        help="Group by exposure within given %% tolerance")
 arg_parser.add_argument("-gt", "--grouptemperature", type=float, metavar="<Bandwidth>",
                         help="Group by temperature with given bandwidth")
 arg_parser.add_argument("-mg", "--minimumgroup", type=int, metavar="<Minimum group size>",

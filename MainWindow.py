@@ -87,11 +87,9 @@ class MainWindow(QMainWindow):
         # Grouping boxes and parameters
 
         self.ui.groupBySizeCB.setChecked(data_model.get_group_by_size())
-        self.ui.groupByExposureCB.setChecked(data_model.get_group_by_exposure())
         self.ui.groupByTemperatureCB.setChecked(data_model.get_group_by_temperature())
         self.ui.ignoreSmallGroupsCB.setChecked(data_model.get_ignore_groups_fewer_than())
 
-        self.ui.exposureGroupBandwidth.setText(f"{data_model.get_exposure_group_bandwidth()}")
         self.ui.temperatureGroupBandwidth.setText(f"{data_model.get_temperature_group_bandwidth()}")
         self.ui.minimumGroupSize.setText(str(data_model.get_minimum_group_size()))
 
@@ -175,10 +173,8 @@ class MainWindow(QMainWindow):
 
         # Grouping controls
         self.ui.groupBySizeCB.clicked.connect(self.group_by_size_clicked)
-        self.ui.groupByExposureCB.clicked.connect(self.group_by_exposure_clicked)
         self.ui.groupByTemperatureCB.clicked.connect(self.group_by_temperature_clicked)
         self.ui.ignoreSmallGroupsCB.clicked.connect(self.ignore_small_groups_clicked)
-        self.ui.exposureGroupBandwidth.editingFinished.connect(self.exposure_group_bandwidth_changed)
         self.ui.temperatureGroupBandwidth.editingFinished.connect(self.temperature_group_bandwidth_changed)
         self.ui.minimumGroupSize.editingFinished.connect(self.minimum_group_size_changed)
 
@@ -252,11 +248,6 @@ class MainWindow(QMainWindow):
 
     def group_by_size_clicked(self):
         self._data_model.set_group_by_size(self.ui.groupBySizeCB.isChecked())
-        self.enable_fields()
-        self.enable_buttons()
-
-    def group_by_exposure_clicked(self):
-        self._data_model.set_group_by_exposure(self.ui.groupByExposureCB.isChecked())
         self.enable_fields()
         self.enable_buttons()
 
@@ -352,16 +343,6 @@ class MainWindow(QMainWindow):
         self._field_validity[self.ui.subFolderName] = valid
         self.enable_buttons()
 
-    def exposure_group_bandwidth_changed(self):
-        """User has entered value in exposure group bandwidth field.  Validate and save"""
-        proposed_new_number: str = self.ui.exposureGroupBandwidth.text()
-        new_number = Validators.valid_float_in_range(proposed_new_number, 0.1, 50.0)
-        valid = new_number is not None
-        if valid:
-            self._data_model.set_exposure_group_bandwidth(new_number)
-        SharedUtils.background_validity_color(self.ui.exposureGroupBandwidth, valid)
-        self._field_validity[self.ui.exposureGroupBandwidth] = valid
-
     def temperature_group_bandwidth_changed(self):
         """User has entered value in temperature group bandwidth field.  Validate and save"""
         proposed_new_number: str = self.ui.temperatureGroupBandwidth.text()
@@ -388,7 +369,6 @@ class MainWindow(QMainWindow):
                                          == Constants.INPUT_DISPOSITION_SUBFOLDER)
 
         # Grouping parameters go with their corresponding checkbox
-        self.ui.exposureGroupBandwidth.setEnabled(self._data_model.get_group_by_exposure())
         self.ui.temperatureGroupBandwidth.setEnabled(self._data_model.get_group_by_temperature())
 
     # Open a file dialog to pick files to be processed
@@ -597,7 +577,6 @@ class MainWindow(QMainWindow):
     # see to be what gets processed.  Then re-check if the Commit button is still enabled.
 
     def commit_fields_continue(self) -> bool:
-        self.exposure_group_bandwidth_changed()
         self.min_max_drop_changed()
         self.minimum_group_size_changed()
         self.pedestal_amount_changed()
@@ -645,9 +624,7 @@ class MainWindow(QMainWindow):
     #
 
     def get_appropriate_output_path(self, sample_file: FileDescriptor):
-        if self._data_model.get_group_by_exposure() \
-                or self._data_model.get_group_by_size() \
-                or self._data_model.get_group_by_temperature():
+        if self._data_model.get_group_by_size() or self._data_model.get_group_by_temperature():
             return self.get_group_output_directory()
         else:
             path = SharedUtils.create_output_path(sample_file, self._data_model.get_master_combine_method(),
@@ -698,8 +675,6 @@ class MainWindow(QMainWindow):
         group_parts = []
         if self._data_model.get_group_by_size():
             group_parts.append("Size")
-        if self._data_model.get_group_by_exposure():
-            group_parts.append("Exposure")
         if self._data_model.get_group_by_temperature():
             group_parts.append("Temp")
         if self._data_model.get_ignore_groups_fewer_than():

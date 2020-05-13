@@ -28,9 +28,7 @@ class DataModel:
         self._auto_directory_recursive: bool = preferences.get_auto_directory_recursive()
         self._auto_directory_bias_only: bool = preferences.get_auto_directory_bias_only()
         self._group_by_size: bool = preferences.get_group_by_size()
-        self._group_by_exposure: bool = preferences.get_group_by_exposure()
         self._group_by_temperature: bool = preferences.get_group_by_temperature()
-        self._exposure_group_bandwidth: float = preferences.get_exposure_group_bandwidth()
         self._temperature_group_bandwidth: float = preferences.get_temperature_group_bandwidth()
         self._ignore_file_type: bool = False
         self._ignore_groups_fewer_than: bool = preferences.get_ignore_groups_fewer_than()
@@ -146,12 +144,6 @@ class DataModel:
     def set_group_by_size(self, is_grouped: bool):
         self._group_by_size = is_grouped
 
-    def get_group_by_exposure(self) -> bool:
-        return self._group_by_exposure
-
-    def set_group_by_exposure(self, is_grouped: bool):
-        self._group_by_exposure = is_grouped
-
     def get_group_by_temperature(self) -> bool:
         return self._group_by_temperature
 
@@ -169,17 +161,6 @@ class DataModel:
 
     def set_auto_directory_bias_only(self, bias_only: bool):
         self._auto_directory_bias_only = bias_only
-
-    # How much, as a percentage, can exposures vary before the files are considered to be in a different group?
-
-    def get_exposure_group_bandwidth(self) -> float:
-        bandwidth: float = self._exposure_group_bandwidth
-        assert 0.1 <= bandwidth <= 50.0
-        return bandwidth
-
-    def set_exposure_group_bandwidth(self, bandwidth: float):
-        assert 0.1 <= bandwidth <= 50.0
-        self._exposure_group_bandwidth = bandwidth
 
     # How much, as a percentage, can temperatures vary before being considered a different group?
 

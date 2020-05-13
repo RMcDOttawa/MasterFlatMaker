@@ -50,11 +50,7 @@ class Preferences(QSettings):
 
     # Are we processing multiple file sets at once using grouping?
     GROUP_BY_SIZE = "group_by_size"
-    GROUP_BY_EXPOSURE = "group_by_exposure"
     GROUP_BY_TEMPERATURE = "group_by_temperature"
-
-    # How much, as a percentage, can exposures vary before the files are considered to be in a different group?
-    EXPOSURE_GROUP_BANDWIDTH = "exposure_group_bandwidth"
 
     # How much, as a percentage, can temperatures vary before being considered a different group?
     TEMPERATURE_GROUP_BANDWIDTH = "temperature_group_bandwidth"
@@ -230,28 +226,11 @@ class Preferences(QSettings):
     def set_group_by_size(self, is_grouped: bool):
         self.setValue(self.GROUP_BY_SIZE, is_grouped)
 
-    def get_group_by_exposure(self) -> bool:
-        return bool(self.value(self.GROUP_BY_EXPOSURE, defaultValue=False))
-
-    def set_group_by_exposure(self, is_grouped: bool):
-        self.setValue(self.GROUP_BY_EXPOSURE, is_grouped)
-
     def get_group_by_temperature(self) -> bool:
         return bool(self.value(self.GROUP_BY_TEMPERATURE, defaultValue=False))
 
     def set_group_by_temperature(self, is_grouped: bool):
         self.setValue(self.GROUP_BY_TEMPERATURE, is_grouped)
-
-    # How much, as a percentage, can exposures vary before the files are considered to be in a different group?
-
-    def get_exposure_group_bandwidth(self) -> float:
-        bandwidth: float = float(self.value(self.EXPOSURE_GROUP_BANDWIDTH, defaultValue=1.0))
-        assert 0.1 <= bandwidth <= 50.0
-        return bandwidth
-
-    def set_exposure_group_bandwidth(self, bandwidth: float):
-        assert 0.1 <= bandwidth < 50.0
-        self.setValue(self.EXPOSURE_GROUP_BANDWIDTH, bandwidth)
 
     # Bandwidth to use for clustering temperatures into groups
 

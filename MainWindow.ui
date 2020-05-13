@@ -715,17 +715,31 @@
            <string>Process Multiple Files at Once, Grouped</string>
           </property>
           <layout class="QGridLayout" name="gridLayout_3">
-           <item row="3" column="1">
-            <widget class="QLineEdit" name="minimumGroupSize">
-             <property name="maximumSize">
-              <size>
-               <width>31</width>
-               <height>21</height>
-              </size>
+           <item row="1" column="0">
+            <widget class="QCheckBox" name="groupByTemperatureCB">
+             <property name="toolTip">
+              <string>Process sets of files having different CCD temperatures</string>
+             </property>
+             <property name="text">
+              <string>Group by Temperature, width:</string>
              </property>
             </widget>
            </item>
-           <item row="2" column="1">
+           <item row="2" column="0">
+            <widget class="QCheckBox" name="ignoreSmallGroupsCB">
+             <property name="text">
+              <string>Ignore groups with fewer than:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="2">
+            <widget class="QLabel" name="label_9">
+             <property name="text">
+              <string>files</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1">
             <widget class="QLineEdit" name="temperatureGroupBandwidth">
              <property name="maximumSize">
               <size>
@@ -738,53 +752,6 @@
              </property>
             </widget>
            </item>
-           <item row="2" column="0">
-            <widget class="QCheckBox" name="groupByTemperatureCB">
-             <property name="toolTip">
-              <string>Process sets of files having different CCD temperatures</string>
-             </property>
-             <property name="text">
-              <string>Group by Temperature, width:</string>
-             </property>
-            </widget>
-           </item>
-           <item row="1" column="0">
-            <widget class="QCheckBox" name="groupByExposureCB">
-             <property name="toolTip">
-              <string>Process sets of files having different exposure times</string>
-             </property>
-             <property name="text">
-              <string>Group by Exposure, width:</string>
-             </property>
-            </widget>
-           </item>
-           <item row="3" column="2">
-            <widget class="QLabel" name="label_9">
-             <property name="text">
-              <string>files</string>
-             </property>
-            </widget>
-           </item>
-           <item row="1" column="1">
-            <widget class="QLineEdit" name="exposureGroupBandwidth">
-             <property name="maximumSize">
-              <size>
-               <width>31</width>
-               <height>16777215</height>
-              </size>
-             </property>
-             <property name="toolTip">
-              <string>Group together exposures that are within this much on either side of the group centre.</string>
-             </property>
-            </widget>
-           </item>
-           <item row="3" column="0">
-            <widget class="QCheckBox" name="ignoreSmallGroupsCB">
-             <property name="text">
-              <string>Ignore groups with fewer than:</string>
-             </property>
-            </widget>
-           </item>
            <item row="0" column="0" colspan="2">
             <widget class="QCheckBox" name="groupBySizeCB">
              <property name="toolTip">
@@ -792,6 +759,16 @@
              </property>
              <property name="text">
               <string>Group by size (dimensions and binning)</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="1">
+            <widget class="QLineEdit" name="minimumGroupSize">
+             <property name="maximumSize">
+              <size>
+               <width>31</width>
+               <height>21</height>
+              </size>
              </property>
             </widget>
            </item>
@@ -963,8 +940,6 @@
   <tabstop>fixedPreCalFileRB</tabstop>
   <tabstop>selectPreCalFile</tabstop>
   <tabstop>groupBySizeCB</tabstop>
-  <tabstop>groupByExposureCB</tabstop>
-  <tabstop>exposureGroupBandwidth</tabstop>
   <tabstop>groupByTemperatureCB</tabstop>
   <tabstop>temperatureGroupBandwidth</tabstop>
   <tabstop>ignoreSmallGroupsCB</tabstop>

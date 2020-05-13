@@ -73,7 +73,6 @@ class FileCombiner:
                        output_directory: str,
                        console: Console):
         console.push_level()
-        exposure_bandwidth = data_model.get_exposure_group_bandwidth()
         temperature_bandwidth = data_model.get_temperature_group_bandwidth()
         disposition_folder = data_model.get_disposition_subfolder_name()
         substituted_folder_name = SharedUtils.substitute_date_time_filter_in_string(disposition_folder)
@@ -86,7 +85,6 @@ class FileCombiner:
         #  Process size groups, or all sizes if not grouping
         groups_by_size = self.get_groups_by_size(selected_files, data_model.get_group_by_size())
         group_by_size = data_model.get_group_by_size()
-        group_by_exposure = data_model.get_group_by_exposure()
         group_by_temperature = data_model.get_group_by_temperature()
         for size_group in groups_by_size:
             self.check_cancellation()
@@ -100,48 +98,31 @@ class FileCombiner:
                 if group_by_size:
                     console.message(f"Processing one size group: {len(size_group)} "
                                     f"files {size_group[0].get_size_key()}", +1)
-                # Within this size group, process exposure groups, or all exposures if not grouping
-                groups_by_exposure = self.get_groups_by_exposure(size_group,
-                                                                 data_model.get_group_by_exposure(),
-                                                                 exposure_bandwidth)
-                for exposure_group in groups_by_exposure:
+                # Within this size group, process temperature groups, or all temperatures if not grouping
+                groups_by_temperature = \
+                    self.get_groups_by_temperature(size_group,
+                                                   data_model.get_group_by_temperature(),
+                                                   temperature_bandwidth)
+                for temperature_group in groups_by_temperature:
                     self.check_cancellation()
-                    (mean_exposure, _) = ImageMath.mean_exposure_and_temperature(exposure_group)
                     console.push_level()
-                    if len(exposure_group) < minimum_group_size:
-                        if group_by_exposure:
-                            console.message(f"Ignoring one exposure group: {len(exposure_group)} "
-                                            f"files exposed at mean {mean_exposure:.2f} seconds", +1)
+                    (_, mean_temperature) = ImageMath.mean_exposure_and_temperature(
+                        temperature_group)
+                    if len(temperature_group) < minimum_group_size:
+                        if group_by_temperature:
+                            console.message(f"Ignoring one temperature group: {len(temperature_group)} "
+                                            f"files with mean temperature {mean_temperature:.1f}", +1)
                     else:
-                        if group_by_exposure:
-                            console.message(f"Processing one exposure group: {len(exposure_group)} "
-                                            f"files exposed at mean {mean_exposure:.2f} seconds", +1)
-                        # Within this exposure group, process temperature groups, or all temperatures if not grouping
-                        groups_by_temperature = \
-                            self.get_groups_by_temperature(exposure_group,
-                                                           data_model.get_group_by_temperature(),
-                                                           temperature_bandwidth)
-                        for temperature_group in groups_by_temperature:
-                            self.check_cancellation()
-                            console.push_level()
-                            (_, mean_temperature) = ImageMath.mean_exposure_and_temperature(
-                                temperature_group)
-                            if len(temperature_group) < minimum_group_size:
-                                if group_by_temperature:
-                                    console.message(f"Ignoring one temperature group: {len(temperature_group)} "
-                                                    f"files with mean temperature {mean_temperature:.1f}", +1)
-                            else:
-                                if group_by_temperature:
-                                    console.message(f"Processing one temperature group: {len(temperature_group)} "
-                                                    f"files with mean temperature {mean_temperature:.1f}", +1)
-                                # Now we have a list of descriptors, grouped as appropriate, to process
-                                self.process_one_group(data_model, temperature_group,
-                                                       output_directory,
-                                                       data_model.get_master_combine_method(),
-                                                       substituted_folder_name,
-                                                       console)
-                                self.check_cancellation()
-                            console.pop_level()
+                        if group_by_temperature:
+                            console.message(f"Processing one temperature group: {len(temperature_group)} "
+                                            f"files with mean temperature {mean_temperature:.1f}", +1)
+                        # Now we have a list of descriptors, grouped as appropriate, to process
+                        self.process_one_group(data_model, temperature_group,
+                                               output_directory,
+                                               data_model.get_master_combine_method(),
+                                               substituted_folder_name,
+                                               console)
+                        self.check_cancellation()
                     console.pop_level()
             console.pop_level()
         console.message("Group combining complete", 0)
@@ -455,10 +436,6 @@ class FileCombiner:
         processing_message = ""
         if data_model.get_group_by_size():
             processing_message += f"binned {binning} x {binning}"
-        if data_model.get_group_by_exposure():
-            if len(processing_message) > 0:
-                processing_message += ","
-            processing_message += f" exposed {exposure} seconds"
         if data_model.get_group_by_temperature():
             if len(processing_message) > 0:
                 processing_message += ","

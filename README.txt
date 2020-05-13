@@ -3,7 +3,7 @@ window opens.  If run given a list of file names as args, then those are immedia
 without the UI interaction.
 
 Files with same dimensions can be manually selected for combination, or you can point the program
-to a large set of files and have it automatically group them by dimensions, exposure, filter, and temperature
+to a large set of files and have it automatically group them by dimensions, filter, and temperature
 and produce a master flat for each of the grouped sets.
 
 Preferences control how they are combined and where the result goes. You should always run the
@@ -37,7 +37,6 @@ Options
                                     used only if no "group" options are chosen)
 
     -gs  or --groupsize             Group files by size (dimensions and binning)
-    -ge  or --groupexposure <w>     Group files by exposure, within given bandwidth
     -gt  or --grouptemperature <w>  Group files by temperature, with given bandwidth
     -mg  or --minimumgroup <n>      Ignore groups with fewer than <n> files
     -od  or --outputdirectory <d>   Directory to receive grouped master files
@@ -46,4 +45,4 @@ Examples:
 
 MasterFlatMaker --noprecal *.fits
 MasterFlatMaker -p 100 -s 2.0 *.fits
-MasterFlatMaker -a ./bias-library -ar -s 2.0 -gs -ge 5 -gt 10 -od ./output-directory ./data/*.fits
+MasterFlatMaker -a ./bias-library -ar -s 2.0 -gs -gt 10 -od ./output-directory ./data/*.fits

@@ -179,6 +179,7 @@ class Calibrator:
     # Calibrate the given files, each with the closest-matching calibration file found
     # in a given directory.  We try to match both the exposure time and the temperature,
     # giving more weight to the exposure time.
+
     def closest_match(self, descriptors: [FileDescriptor],
                       target_exposure: float,
                       target_temperature: float,
@@ -189,7 +190,7 @@ class Calibrator:
         file_exposures = numpy.array([f.get_exposure() for f in descriptors])
         scores = numpy.abs(file_temperatures - target_temperature) \
                  + numpy.abs(file_exposures - target_exposure) * Constants.AUTO_CALIBRATION_EXPOSURE_WEIGHT
-        # The smallest score is the best choice
+        # The score is the deviation from the target, so the smallest score is the best choice
         minimum_score = numpy.min(scores)
         indices = numpy.where(scores == minimum_score)
         assert len(indices) > 0  # Min was from the list, so there must be at least one

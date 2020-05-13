@@ -144,22 +144,13 @@ class CommandLineHandler:
             print(f"   Output path: {args.output}")
             output_path = args.output
 
-        # Grouping   gs   ge <threshold>   gt <threshold>  mg <minimum>
+        # Grouping   gs   gt <threshold>   mg <minimum>
         #   -   If -ge used, bandwidth is 0.1 to 50
         #   -   If -gt used, bandwidth is 0.1 to 50
         #   -   If -mg used, group size is > 0
         if args.groupsize:
             print("   Group files by size")
             self._data_model.set_group_by_size(True)
-        if args.groupexposure is not None:
-            self._data_model.set_group_by_exposure(True)
-            bandwidth = float(args.groupexposure)
-            if 0.1 <= bandwidth <= 50.0:
-                print(f"   Group files by exposure with bandwidth {bandwidth}")
-                self._data_model.set_exposure_group_bandwidth(bandwidth)
-            else:
-                print("-ge bandwidth must be between 0.1 and 50")
-                valid = False
         if args.grouptemperature is not None:
             self._data_model.set_group_by_temperature(True)
             bandwidth = float(args.grouptemperature)
@@ -180,8 +171,7 @@ class CommandLineHandler:
                 valid = False
 
         # If any of the grouping options are in use, then the output directory is mandatory
-        if self._data_model.get_group_by_temperature() or self._data_model.get_group_by_exposure() \
-                or self._data_model.get_group_by_size():
+        if self._data_model.get_group_by_temperature() or self._data_model.get_group_by_size():
             if args.outputdirectory is None:
                 print("If any of the group-by options are used, then the output directory option is mandatory")
                 valid = False
@@ -219,9 +209,7 @@ class CommandLineHandler:
         # Do the file combination - two methods depending on whether we are processing by groups
         try:
             # Are we using grouped processing?
-            if self._data_model.get_group_by_exposure() \
-                    or self._data_model.get_group_by_size() \
-                    or self._data_model.get_group_by_temperature():
+            if self._data_model.get_group_by_size() or self._data_model.get_group_by_temperature():
                 file_combiner.process_groups(self._data_model, descriptors,
                                              output_directory,
                                              console)
@@ -306,7 +294,6 @@ class CommandLineHandler:
         now = datetime.now()
         date_time_string = now.strftime("%Y%m%d-%H%M")
         temperature = f"{sample_input_file.get_temperature():.1f}"
-        exposure = f"{sample_input_file.get_exposure():.3f}"
         dimensions = f"{sample_input_file.get_x_dimension()}x{sample_input_file.get_y_dimension()}"
         binning = f"{sample_input_file.get_binning()}x{sample_input_file.get_binning()}"
         method = Constants.combine_method_string(combine_method)
@@ -314,7 +301,7 @@ class CommandLineHandler:
             method += str(sigma_threshold)
         elif combine_method == Constants.COMBINE_MINMAX:
             method += str(min_max_clipped)
-        file_name = f"FLAT-{method}-{date_time_string}-{exposure}s-{temperature}C-{dimensions}-{binning}.fit"
+        file_name = f"FLAT-{method}-{date_time_string}-{temperature}C-{dimensions}-{binning}.fit"
 
         return file_name
 

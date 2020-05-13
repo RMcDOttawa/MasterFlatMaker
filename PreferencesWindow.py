@@ -70,11 +70,9 @@ class PreferencesWindow(QDialog):
 
         # Grouping information
         self.ui.groupBySizeCB.setChecked(preferences.get_group_by_size())
-        self.ui.groupByExposureCB.setChecked(preferences.get_group_by_exposure())
         self.ui.groupByTemperatureCB.setChecked(preferences.get_group_by_temperature())
         self.ui.ignoreSmallGroupsCB.setChecked(preferences.get_ignore_groups_fewer_than())
 
-        self.ui.exposureGroupBandwidth.setText(f"{preferences.get_exposure_group_bandwidth()}")
         self.ui.temperatureGroupBandwidth.setText(f"{preferences.get_temperature_group_bandwidth()}")
         self.ui.minimumGroupSize.setText(str(preferences.get_minimum_group_size()))
 
@@ -99,7 +97,6 @@ class PreferencesWindow(QDialog):
         self.ui.setAutoDirectory.clicked.connect(self.select_auto_calibration_directory_clicked)
 
         self.ui.groupBySizeCB.clicked.connect(self.group_by_size_clicked)
-        self.ui.groupByExposureCB.clicked.connect(self.group_by_exposure_clicked)
         self.ui.groupByTemperatureCB.clicked.connect(self.group_by_temperature_clicked)
         self.ui.ignoreSmallGroupsCB.clicked.connect(self.ignore_small_groups_clicked)
 
@@ -115,7 +112,6 @@ class PreferencesWindow(QDialog):
         self.ui.sigmaThreshold.editingFinished.connect(self.sigma_threshold_changed)
         self.ui.subFolderName.editingFinished.connect(self.sub_folder_name_changed)
         self.ui.fixedPedestalAmount.editingFinished.connect(self.pedestal_amount_changed)
-        self.ui.exposureGroupBandwidth.editingFinished.connect(self.exposure_group_bandwidth_changed)
         self.ui.temperatureGroupBandwidth.editingFinished.connect(self.temperature_group_bandwidth_changed)
         self.ui.minimumGroupSize.editingFinished.connect(self.minimum_group_size_changed)
 
@@ -129,10 +125,6 @@ class PreferencesWindow(QDialog):
 
     def group_by_size_clicked(self):
         self._preferences.set_group_by_size(self.ui.groupBySizeCB.isChecked())
-        self.enableFields()
-
-    def group_by_exposure_clicked(self):
-        self._preferences.set_group_by_exposure(self.ui.groupByExposureCB.isChecked())
         self.enableFields()
 
     def group_by_temperature_clicked(self):
@@ -228,15 +220,6 @@ class PreferencesWindow(QDialog):
             self._preferences.set_precalibration_pedestal(new_number)
         SharedUtils.background_validity_color(self.ui.fixedPedestalAmount, valid)
 
-    def exposure_group_bandwidth_changed(self):
-        """User has entered value in exposure group bandwidth field.  Validate and save"""
-        proposed_new_number: str = self.ui.exposureGroupBandwidth.text()
-        new_number = Validators.valid_float_in_range(proposed_new_number, 0.1, 50.0)
-        valid = new_number is not None
-        if valid:
-            self._preferences.set_exposure_group_bandwidth(new_number)
-        SharedUtils.background_validity_color(self.ui.exposureGroupBandwidth, valid)
-
     def temperature_group_bandwidth_changed(self):
         """User has entered value in temperature group bandwidth field.  Validate and save"""
         proposed_new_number: str = self.ui.temperatureGroupBandwidth.text()
@@ -297,7 +280,6 @@ class PreferencesWindow(QDialog):
             self._preferences.get_precalibration_type() == Constants.CALIBRATION_FIXED_FILE)
         self.ui.setAutoDirectory.setEnabled(
             self._preferences.get_precalibration_type() == Constants.CALIBRATION_AUTO_DIRECTORY)
-        self.ui.exposureGroupBandwidth.setEnabled(self._preferences.get_group_by_exposure())
         self.ui.temperatureGroupBandwidth.setEnabled(self._preferences.get_group_by_temperature())
         self.ui.minimumGroupSize.setEnabled(self._preferences.get_ignore_groups_fewer_than())
 
