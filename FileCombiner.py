@@ -86,6 +86,7 @@ class FileCombiner:
         groups_by_size = self.get_groups_by_size(selected_files, data_model.get_group_by_size())
         group_by_size = data_model.get_group_by_size()
         group_by_temperature = data_model.get_group_by_temperature()
+        group_by_filter = data_model.get_group_by_filter()
         for size_group in groups_by_size:
             self.check_cancellation()
             console.push_level()
@@ -116,12 +117,28 @@ class FileCombiner:
                         if group_by_temperature:
                             console.message(f"Processing one temperature group: {len(temperature_group)} "
                                             f"files with mean temperature {mean_temperature:.1f}", +1)
-                        # Now we have a list of descriptors, grouped as appropriate, to process
-                        self.process_one_group(data_model, temperature_group,
-                                               output_directory,
-                                               data_model.get_master_combine_method(),
-                                               substituted_folder_name,
-                                               console)
+                        # Within this temperature group, process filter groups, or all filters if not grouping
+                        groups_by_filter = \
+                            self.get_groups_by_filter(temperature_group,
+                                                      data_model.get_group_by_filter())
+                        for filter_group in groups_by_filter:
+                            self.check_cancellation()
+                            console.push_level()
+                            filter_name = filter_group[0].get_filter_name()
+                            if len(filter_group) < minimum_group_size:
+                                if group_by_filter:
+                                    console.message(f"Ignoring one filter group: {len(filter_group)} "
+                                                    f"files with {filter_name} filter ", +1)
+                            else:
+                                if group_by_filter:
+                                    console.message(f"Processing one filter group: {len(filter_group)} "
+                                                    f"files with {filter_name} filter ", +1)
+                                self.process_one_group(data_model, filter_group,
+                                                       output_directory,
+                                                       data_model.get_master_combine_method(),
+                                                       substituted_folder_name,
+                                                       console)
+                            console.pop_level()
                         self.check_cancellation()
                     console.pop_level()
             console.pop_level()
@@ -284,6 +301,22 @@ class FileCombiner:
             return [selected_files]   # One group with all the files
 
     # Given list of file descriptors, return a list of lists, where each outer list is all the
+    # file descriptors with the same filter name (case insensitive)
+
+    @staticmethod
+    def get_groups_by_filter(selected_files: [FileDescriptor], is_grouped: bool) -> [[FileDescriptor]]:
+        if is_grouped:
+            descriptors_sorted = sorted(selected_files, key=FileDescriptor.get_filter_name_lower)
+            descriptors_grouped = groupby(descriptors_sorted, FileDescriptor.get_filter_name_lower)
+            result: [[FileDescriptor]] = []
+            for key, sub_group in descriptors_grouped:
+                sub_list = list(sub_group)
+                result.append(sub_list)
+            return result
+        else:
+            return [selected_files]   # One group with all the files
+
+    # Given list of file descriptors, return a list of lists, where each outer list is all the
     # file descriptors with the same exposure within a given tolerance.
     # Note that, because of the "tolerance" comparison, this is a clustering analysis, not
     # a simple python "groupby", which assumes the values are exact.
@@ -433,14 +466,15 @@ class FileCombiner:
         binning = sample_file.get_binning()
         exposure = sample_file.get_exposure()
         temperature = sample_file.get_temperature()
-        processing_message = ""
+        message_parts: [str] = []
         if data_model.get_group_by_size():
-            processing_message += f"binned {binning} x {binning}"
+            message_parts.append(f"binned {binning} x {binning}")
+        if data_model.get_group_by_filter():
+            message_parts.append(f"with {sample_file.get_filter_name()} filter")
         if data_model.get_group_by_temperature():
-            if len(processing_message) > 0:
-                processing_message += ","
-            processing_message += f" at {temperature} degrees."
-        console.message(f"Processing {number_files} files {processing_message}", +1)
+            message_parts.append(f"at {temperature} degrees")
+        processing_message = ", ".join(message_parts)
+        console.message(f"Processing {number_files} files {processing_message}.", +1)
 
     def check_cancellation(self):
         if self._session_controller.thread_cancelled():
