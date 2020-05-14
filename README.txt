@@ -22,6 +22,7 @@ Options
     -a   or --auto <dir>            Precalibrate by with best bias file in given directory
     -ar  or --autorecursive         Recursively include sub-directories in auto bias file search
     -ab  or --autobias              Limit auto-selected files to Bias files only
+    -ax  or --autoresults           Display specifications of each selected calibration file
 
     Combination algorithm:  if none, uses GUI preferences
     -m   or --mean                  Combine files with simple mean

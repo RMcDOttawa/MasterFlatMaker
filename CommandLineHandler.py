@@ -103,6 +103,9 @@ class CommandLineHandler:
         if args.autobias:
             print(f"   Setting auto bias is bias files only")
             self._data_model.set_auto_directory_bias_only(True)
+        if args.autoresults:
+            print(f"   Setting display of automatic selection results")
+            self._data_model.set_display_auto_select_results(True)
 
         # Master frame combination algorithm and parameters
         if args.mean:

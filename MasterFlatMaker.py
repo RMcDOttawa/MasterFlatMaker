@@ -33,6 +33,8 @@ arg_parser.add_argument("-ar", "--autorecursive", action="store_true",
                         help="Recursively check sub-folders for auto calibration")
 arg_parser.add_argument("-ab", "--autobias", action="store_true",
                         help="Restrict auto calibration files considered to only Bias files")
+arg_parser.add_argument("-ax", "--autoresults", action="store_true",
+                        help="Display results of each auto-calibration file selection search")
 
 # # combination algorithm options - only one may be used
 method_arg_group = arg_parser.add_mutually_exclusive_group()
