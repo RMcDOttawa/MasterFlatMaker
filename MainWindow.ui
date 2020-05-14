@@ -45,7 +45,7 @@
        <string/>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="filesTab">
        <attribute name="title">
@@ -553,7 +553,7 @@
               <string>In auto directory, only BIAS or FLAT files will be considered</string>
              </property>
              <property name="text">
-              <string>Bias &amp;&amp; Flat files only</string>
+              <string>Dark &amp;&amp; Bias files only</string>
              </property>
             </widget>
            </item>
@@ -1001,7 +1001,7 @@
  <resources/>
  <connections/>
  <buttongroups>
-  <buttongroup name="preCalibrationGroup"/>
   <buttongroup name="dispositionGroup"/>
+  <buttongroup name="preCalibrationGroup"/>
  </buttongroups>
 </ui>
