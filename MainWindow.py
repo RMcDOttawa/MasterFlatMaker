@@ -83,6 +83,7 @@ class MainWindow(QMainWindow):
 
         self.ui.autoRecursive.setChecked(data_model.get_auto_directory_recursive())
         self.ui.autoBiasOnly.setChecked(data_model.get_auto_directory_bias_only())
+        self.ui.displayAutoResultsCB.setChecked(data_model.get_display_auto_select_results())
 
         # Grouping boxes and parameters
 
@@ -171,6 +172,7 @@ class MainWindow(QMainWindow):
         self.ui.fixedPedestalAmount.editingFinished.connect(self.pedestal_amount_changed)
         self.ui.autoRecursive.clicked.connect(self.auto_recursive_clicked)
         self.ui.autoBiasOnly.clicked.connect(self.auto_bias_only_clicked)
+        self.ui.displayAutoResultsCB.clicked.connect(self.display_auto_results_clicked)
 
         # Grouping controls
         self.ui.groupBySizeCB.clicked.connect(self.group_by_size_clicked)
@@ -275,6 +277,11 @@ class MainWindow(QMainWindow):
 
     def auto_bias_only_clicked(self):
         self._data_model.set_auto_directory_bias_only(self.ui.autoBiasOnly.isChecked())
+        self.enable_fields()
+        self.enable_buttons()
+
+    def display_auto_results_clicked(self):
+        self._data_model.set_display_auto_select_results(self.ui.displayAutoResultsCB.isChecked())
         self.enable_fields()
         self.enable_buttons()
 
@@ -470,6 +477,7 @@ class MainWindow(QMainWindow):
 
         self.ui.autoRecursive.setEnabled(calibration_type == Constants.CALIBRATION_AUTO_DIRECTORY)
         self.ui.autoBiasOnly.setEnabled(calibration_type == Constants.CALIBRATION_AUTO_DIRECTORY)
+        self.ui.displayAutoResultsCB.setEnabled(calibration_type == Constants.CALIBRATION_AUTO_DIRECTORY)
 
         # "combineSelectedButton" is enabled only if
         #   - No text fields are in error state

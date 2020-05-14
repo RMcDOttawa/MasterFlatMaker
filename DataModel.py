@@ -35,6 +35,7 @@ class DataModel:
         self._ignore_groups_fewer_than: bool = preferences.get_ignore_groups_fewer_than()
         self._minimum_group_size: int = preferences.get_minimum_group_size()
         self._display_average_adus: bool = preferences.get_display_average_adus()
+        self._display_auto_select_results: bool = preferences.get_display_auto_select_results()
 
     def get_master_combine_method(self) -> int:
         result = self._master_combine_method
@@ -168,6 +169,12 @@ class DataModel:
 
     def set_auto_directory_bias_only(self, bias_only: bool):
         self._auto_directory_bias_only = bias_only
+
+    def get_display_auto_select_results(self) -> bool:
+        return self._display_auto_select_results
+
+    def set_display_auto_select_results(self, display: bool):
+        self._display_auto_select_results = display
 
     # How much, as a percentage, can temperatures vary before being considered a different group?
 

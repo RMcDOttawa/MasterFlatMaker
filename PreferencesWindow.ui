@@ -44,152 +44,10 @@
       <string>Pre-Calibration of Flat Files</string>
      </property>
      <layout class="QGridLayout" name="gridLayout_4">
-      <item row="0" column="0" colspan="2">
-       <widget class="QRadioButton" name="noPreClalibrationRB">
-        <property name="toolTip">
-         <string>No precalibration</string>
-        </property>
-        <property name="text">
-         <string>No pre-calibration</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="0" colspan="3">
-       <widget class="QRadioButton" name="fixedPedestalRB">
-        <property name="toolTip">
-         <string>Precalibrate by subtracting given constant pedestal value from every pixel</string>
-        </property>
-        <property name="text">
-         <string>Subtract fixed pedestal amount:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="4">
-       <widget class="QLineEdit" name="fixedPedestalAmount">
-        <property name="toolTip">
-         <string>Pedestal value to subtract</string>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="0" colspan="3">
-       <widget class="QRadioButton" name="autoPreCalibrationRB">
-        <property name="toolTip">
-         <string>Automatically choose a matching Bias or Flat file from a directory of Bias files</string>
-        </property>
-        <property name="text">
-         <string>Best Bias or Flat from Directory</string>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="4">
-       <widget class="QPushButton" name="setAutoDirectory">
-        <property name="toolTip">
-         <string>Set the directory containing the calibration Bias files</string>
-        </property>
-        <property name="text">
-         <string>Set Directory</string>
-        </property>
-        <property name="autoDefault">
-         <bool>false</bool>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="0">
-       <spacer name="horizontalSpacer_5">
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-        <property name="sizeType">
-         <enum>QSizePolicy::Fixed</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>48</width>
-          <height>19</height>
-         </size>
-        </property>
-       </spacer>
-      </item>
-      <item row="3" column="1" colspan="2">
-       <widget class="QCheckBox" name="autoRecursive">
-        <property name="text">
-         <string>Include sub-directories</string>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="3">
-       <spacer name="horizontalSpacer_2">
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>31</width>
-          <height>20</height>
-         </size>
-        </property>
-       </spacer>
-      </item>
-      <item row="4" column="0">
-       <spacer name="horizontalSpacer_6">
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-        <property name="sizeType">
-         <enum>QSizePolicy::Fixed</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>48</width>
-          <height>19</height>
-         </size>
-        </property>
-       </spacer>
-      </item>
-      <item row="4" column="1">
-       <widget class="QCheckBox" name="autoBiasOnly">
-        <property name="text">
-         <string>Bias &amp;&amp; Flat files only</string>
-        </property>
-       </widget>
-      </item>
-      <item row="4" column="2">
-       <spacer name="horizontalSpacer_3">
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>45</width>
-          <height>19</height>
-         </size>
-        </property>
-       </spacer>
-      </item>
-      <item row="5" column="0" colspan="2">
-       <widget class="QLabel" name="autoDirectoryName">
-        <property name="text">
-         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:9pt;&quot;&gt;Directory name echoed here&lt;br/&gt;second line&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
-        </property>
-        <property name="wordWrap">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item row="6" column="0" colspan="2">
-       <widget class="QRadioButton" name="FixedPreCalFileRB">
-        <property name="toolTip">
-         <string>Use fixed bias file specified here for precalibration</string>
-        </property>
-        <property name="text">
-         <string>Fixed Bias or Flat File:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="7" column="0" colspan="2">
+      <property name="verticalSpacing">
+       <number>8</number>
+      </property>
+      <item row="9" column="0" colspan="2">
        <widget class="QLabel" name="precalibrationPathDisplay">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
@@ -214,10 +72,181 @@
         </property>
        </widget>
       </item>
-      <item row="6" column="4">
+      <item row="3" column="3">
+       <spacer name="horizontalSpacer_2">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>31</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item row="8" column="0" colspan="2">
+       <widget class="QRadioButton" name="FixedPreCalFileRB">
+        <property name="toolTip">
+         <string>Use fixed bias file specified here for precalibration</string>
+        </property>
+        <property name="text">
+         <string>Fixed Bias or Flat File:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0" colspan="3">
+       <widget class="QRadioButton" name="fixedPedestalRB">
+        <property name="toolTip">
+         <string>Precalibrate by subtracting given constant pedestal value from every pixel</string>
+        </property>
+        <property name="text">
+         <string>Subtract fixed pedestal amount:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="4">
+       <widget class="QLineEdit" name="fixedPedestalAmount">
+        <property name="toolTip">
+         <string>Pedestal value to subtract</string>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="0">
+       <spacer name="horizontalSpacer_6">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeType">
+         <enum>QSizePolicy::Fixed</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>48</width>
+          <height>19</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item row="2" column="0" colspan="3">
+       <widget class="QRadioButton" name="autoPreCalibrationRB">
+        <property name="toolTip">
+         <string>Automatically choose a matching Bias or Flat file from a directory of Bias files</string>
+        </property>
+        <property name="text">
+         <string>Best Bias or Flat from Directory</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="0">
+       <spacer name="horizontalSpacer_5">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeType">
+         <enum>QSizePolicy::Fixed</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>48</width>
+          <height>19</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item row="4" column="2">
+       <spacer name="horizontalSpacer_3">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>45</width>
+          <height>19</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item row="8" column="4">
        <widget class="QPushButton" name="selectPreCalFile">
         <property name="text">
          <string>Set File</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="0" colspan="2">
+       <widget class="QRadioButton" name="noPreClalibrationRB">
+        <property name="toolTip">
+         <string>No precalibration</string>
+        </property>
+        <property name="text">
+         <string>No pre-calibration</string>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="1">
+       <widget class="QCheckBox" name="autoBiasOnly">
+        <property name="text">
+         <string>Bias &amp;&amp; Flat files only</string>
+        </property>
+       </widget>
+      </item>
+      <item row="7" column="0" colspan="2">
+       <widget class="QLabel" name="autoDirectoryName">
+        <property name="text">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:9pt;&quot;&gt;Directory name echoed here&lt;br/&gt;second line&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+        </property>
+        <property name="wordWrap">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="4">
+       <widget class="QPushButton" name="setAutoDirectory">
+        <property name="toolTip">
+         <string>Set the directory containing the calibration Bias files</string>
+        </property>
+        <property name="text">
+         <string>Set Directory</string>
+        </property>
+        <property name="autoDefault">
+         <bool>false</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="1" colspan="2">
+       <widget class="QCheckBox" name="autoRecursive">
+        <property name="text">
+         <string>Include sub-directories</string>
+        </property>
+       </widget>
+      </item>
+      <item row="6" column="0">
+       <spacer name="horizontalSpacer_7">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeType">
+         <enum>QSizePolicy::Fixed</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>48</width>
+          <height>19</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item row="6" column="1">
+       <widget class="QCheckBox" name="displayAutoResultsCB">
+        <property name="toolTip">
+         <string>Display, in the console, the exposure and temperature match of the selected best calibration file.</string>
+        </property>
+        <property name="text">
+         <string>Display specs of selected file</string>
         </property>
        </widget>
       </item>

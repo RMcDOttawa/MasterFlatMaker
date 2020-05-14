@@ -67,6 +67,7 @@ class PreferencesWindow(QDialog):
 
         self.ui.autoRecursive.setChecked(preferences.get_auto_directory_recursive())
         self.ui.autoBiasOnly.setChecked(preferences.get_auto_directory_bias_only())
+        self.ui.displayAutoResultsCB.setChecked(preferences.get_display_auto_select_results())
 
         # Grouping information
         self.ui.groupBySizeCB.setChecked(preferences.get_group_by_size())
@@ -104,6 +105,7 @@ class PreferencesWindow(QDialog):
 
         self.ui.autoRecursive.clicked.connect(self.auto_recursive_clicked)
         self.ui.autoBiasOnly.clicked.connect(self.auto_bias_only_clicked)
+        self.ui.displayAutoResultsCB.clicked.connect(self.display_auto_results_clicked)
 
         self.ui.displayAverageADUs.clicked.connect(self.display_average_adus_clicked)
 
@@ -143,6 +145,10 @@ class PreferencesWindow(QDialog):
 
     def auto_bias_only_clicked(self):
         self._preferences.set_auto_directory_bias_only(self.ui.autoBiasOnly.isChecked())
+        self.enableFields()
+
+    def display_auto_results_clicked(self):
+        self._preferences.set_display_auto_select_results(self.ui.displayAutoResultsCB.isChecked())
         self.enableFields()
 
     def ignore_small_groups_clicked(self):
@@ -292,6 +298,7 @@ class PreferencesWindow(QDialog):
         calibration_type = self._preferences.get_precalibration_type()
         self.ui.autoRecursive.setEnabled(calibration_type == Constants.CALIBRATION_AUTO_DIRECTORY)
         self.ui.autoBiasOnly.setEnabled(calibration_type == Constants.CALIBRATION_AUTO_DIRECTORY)
+        self.ui.displayAutoResultsCB.setEnabled(calibration_type == Constants.CALIBRATION_AUTO_DIRECTORY)
 
     def close_button_clicked(self):
         """Close button has been clicked - close the preferences window"""

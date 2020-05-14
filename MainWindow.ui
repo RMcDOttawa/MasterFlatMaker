@@ -356,67 +356,21 @@
            <string>Pre-Combine Bias/Flat File Calibration</string>
           </property>
           <layout class="QGridLayout" name="gridLayout">
-           <item row="0" column="0" colspan="2">
-            <widget class="QRadioButton" name="noPreClalibrationRB">
+           <property name="verticalSpacing">
+            <number>9</number>
+           </property>
+           <item row="8" column="0" colspan="3">
+            <widget class="QRadioButton" name="fixedPreCalFileRB">
              <property name="toolTip">
-              <string>No precalibration</string>
+              <string>Use fixed bias or flat file specified here for precalibration</string>
              </property>
              <property name="text">
-              <string>No pre-calibration</string>
+              <string>Fixed Bias/Flat File:</string>
              </property>
              <attribute name="buttonGroup">
               <string notr="true">preCalibrationGroup</string>
              </attribute>
             </widget>
-           </item>
-           <item row="1" column="0" colspan="2">
-            <widget class="QRadioButton" name="fixedPedestalRB">
-             <property name="toolTip">
-              <string>Subtract a given fixed pedestal amount from each pixel</string>
-             </property>
-             <property name="text">
-              <string>Pedestal</string>
-             </property>
-             <attribute name="buttonGroup">
-              <string notr="true">preCalibrationGroup</string>
-             </attribute>
-            </widget>
-           </item>
-           <item row="1" column="3" colspan="2">
-            <widget class="QLineEdit" name="fixedPedestalAmount"/>
-           </item>
-           <item row="2" column="0" colspan="2">
-            <widget class="QRadioButton" name="autoPreCalibrationRB">
-             <property name="toolTip">
-              <string>Automatically choose the best matching Bias or Flat file from a directory of files</string>
-             </property>
-             <property name="text">
-              <string>Auto from Directory</string>
-             </property>
-             <attribute name="buttonGroup">
-              <string notr="true">preCalibrationGroup</string>
-             </attribute>
-            </widget>
-           </item>
-           <item row="2" column="2" colspan="2">
-            <widget class="QPushButton" name="setAutoDirectory">
-             <property name="text">
-              <string>Set Dir</string>
-             </property>
-            </widget>
-           </item>
-           <item row="2" column="4">
-            <spacer name="horizontalSpacer_3">
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>34</width>
-               <height>15</height>
-              </size>
-             </property>
-            </spacer>
            </item>
            <item row="3" column="0">
             <spacer name="horizontalSpacer_7">
@@ -434,17 +388,98 @@
              </property>
             </spacer>
            </item>
-           <item row="3" column="1" colspan="3">
-            <widget class="QCheckBox" name="autoRecursive">
-             <property name="toolTip">
-              <string>In &quot;Auto Directory&quot;, include any files in sub-directories too</string>
+           <item row="7" column="0" colspan="6">
+            <widget class="QLabel" name="autoDirectoryName">
+             <property name="text">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:9pt;&quot;&gt;Directory name echoed here&lt;br/&gt;second line&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
              </property>
-             <property name="statusTip">
-              <string/>
+             <property name="alignment">
+              <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+             </property>
+             <property name="wordWrap">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="0" colspan="3">
+            <widget class="QRadioButton" name="autoPreCalibrationRB">
+             <property name="toolTip">
+              <string>Automatically choose the best matching Bias or Flat file from a directory of files</string>
              </property>
              <property name="text">
-              <string>Include sub-directories</string>
+              <string>Auto from Directory</string>
              </property>
+             <attribute name="buttonGroup">
+              <string notr="true">preCalibrationGroup</string>
+             </attribute>
+            </widget>
+           </item>
+           <item row="9" column="0" colspan="6">
+            <widget class="QLabel" name="precalibrationPathDisplay">
+             <property name="minimumSize">
+              <size>
+               <width>0</width>
+               <height>0</height>
+              </size>
+             </property>
+             <property name="text">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:9pt;&quot;&gt;File name is echoed here&lt;br/&gt;Second line&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+             </property>
+             <property name="wordWrap">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="5">
+            <spacer name="horizontalSpacer_3">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>34</width>
+               <height>15</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item row="1" column="4" colspan="2">
+            <widget class="QLineEdit" name="fixedPedestalAmount"/>
+           </item>
+           <item row="2" column="3" colspan="2">
+            <widget class="QPushButton" name="setAutoDirectory">
+             <property name="text">
+              <string>Set Dir</string>
+             </property>
+            </widget>
+           </item>
+           <item row="8" column="5">
+            <spacer name="horizontalSpacer_4">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>34</width>
+               <height>15</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item row="0" column="0" colspan="3">
+            <widget class="QRadioButton" name="noPreClalibrationRB">
+             <property name="toolTip">
+              <string>No precalibration</string>
+             </property>
+             <property name="text">
+              <string>No pre-calibration</string>
+             </property>
+             <attribute name="buttonGroup">
+              <string notr="true">preCalibrationGroup</string>
+             </attribute>
             </widget>
            </item>
            <item row="4" column="0">
@@ -463,7 +498,56 @@
              </property>
             </spacer>
            </item>
-           <item row="4" column="1" colspan="2">
+           <item row="1" column="0" colspan="3">
+            <widget class="QRadioButton" name="fixedPedestalRB">
+             <property name="toolTip">
+              <string>Subtract a given fixed pedestal amount from each pixel</string>
+             </property>
+             <property name="text">
+              <string>Pedestal</string>
+             </property>
+             <attribute name="buttonGroup">
+              <string notr="true">preCalibrationGroup</string>
+             </attribute>
+            </widget>
+           </item>
+           <item row="8" column="3" colspan="2">
+            <widget class="QPushButton" name="selectPreCalFile">
+             <property name="text">
+              <string>Select File</string>
+             </property>
+            </widget>
+           </item>
+           <item row="5" column="0">
+            <spacer name="horizontalSpacer_9">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeType">
+              <enum>QSizePolicy::Fixed</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>40</width>
+               <height>17</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item row="3" column="1" colspan="4">
+            <widget class="QCheckBox" name="autoRecursive">
+             <property name="toolTip">
+              <string>In &quot;Auto Directory&quot;, include any files in sub-directories too</string>
+             </property>
+             <property name="statusTip">
+              <string/>
+             </property>
+             <property name="text">
+              <string>Include sub-directories</string>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="1" colspan="3">
             <widget class="QCheckBox" name="autoBiasOnly">
              <property name="toolTip">
               <string>In auto directory, only BIAS or FLAT files will be considered</string>
@@ -473,68 +557,13 @@
              </property>
             </widget>
            </item>
-           <item row="5" column="0" colspan="5">
-            <widget class="QLabel" name="autoDirectoryName">
-             <property name="text">
-              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:9pt;&quot;&gt;Directory name echoed here&lt;br/&gt;second line&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-             </property>
-             <property name="alignment">
-              <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
-             </property>
-             <property name="wordWrap">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
-           <item row="6" column="0" colspan="2">
-            <widget class="QRadioButton" name="fixedPreCalFileRB">
+           <item row="5" column="1" colspan="4">
+            <widget class="QCheckBox" name="displayAutoResultsCB">
              <property name="toolTip">
-              <string>Use fixed bias or flat file specified here for precalibration</string>
+              <string>Display, in the console, the exposure and temperature match of the selected best calibration file.</string>
              </property>
              <property name="text">
-              <string>Fixed Bias/Flat File:</string>
-             </property>
-             <attribute name="buttonGroup">
-              <string notr="true">preCalibrationGroup</string>
-             </attribute>
-            </widget>
-           </item>
-           <item row="6" column="2" colspan="2">
-            <widget class="QPushButton" name="selectPreCalFile">
-             <property name="text">
-              <string>Select File</string>
-             </property>
-            </widget>
-           </item>
-           <item row="6" column="4">
-            <spacer name="horizontalSpacer_4">
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>34</width>
-               <height>15</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-           <item row="7" column="0" colspan="5">
-            <widget class="QLabel" name="precalibrationPathDisplay">
-             <property name="minimumSize">
-              <size>
-               <width>0</width>
-               <height>0</height>
-              </size>
-             </property>
-             <property name="text">
-              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:9pt;&quot;&gt;File name is echoed here&lt;br/&gt;Second line&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-             </property>
-             <property name="alignment">
-              <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
-             </property>
-             <property name="wordWrap">
-              <bool>true</bool>
+              <string>Display specs of selected file</string>
              </property>
             </widget>
            </item>

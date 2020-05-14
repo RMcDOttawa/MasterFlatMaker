@@ -47,6 +47,7 @@ class Preferences(QSettings):
     AUTO_DIRECTORY_RECURSIVE = "auto_directory_recursive"
     # Should auto-directory restrict files considered to only BIAS files?
     AUTO_DIRECTORY_BIAS_ONLY = "auto_directory_bias_only"
+    DISPLAY_AUTO_SELECT_RESULTS = "display_auto_select_results"
 
     # Are we processing multiple file sets at once using grouping?
     GROUP_BY_SIZE = "group_by_size"
@@ -238,6 +239,12 @@ class Preferences(QSettings):
 
     def set_group_by_filter(self, is_grouped: bool):
         self.setValue(self.GROUP_BY_FILTER, is_grouped)
+
+    def get_display_auto_select_results(self) -> bool:
+        return bool(self.value(self.DISPLAY_AUTO_SELECT_RESULTS, defaultValue=True))
+
+    def set_display_auto_select_results(self, display: bool):
+        self.setValue(self.DISPLAY_AUTO_SELECT_RESULTS, display)
 
     # Bandwidth to use for clustering temperatures into groups
 

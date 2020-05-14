@@ -197,9 +197,11 @@ class Calibrator:
         match_index = indices[0].tolist()[0]
         best_match = descriptors[match_index]
 
-        console.message(f"Target {target_exposure:.1f}s at {target_temperature:.1f} C,"
-                        f" best match is {best_match.get_exposure():.1f}s at"
-                        f" {best_match.get_temperature():.1f} C", +1, temp=True)
+        if self._data_model.get_display_auto_select_results():
+            console.message(f"Target {target_exposure:.1f}s at {target_temperature:.1f} C,"
+                            f" best match is {best_match.get_exposure():.1f}s at"
+                            f" {best_match.get_temperature():.1f} C: "
+                            f"{best_match.get_name()}", +1, temp=True)
 
         return best_match
 
