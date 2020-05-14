@@ -464,7 +464,6 @@ class FileCombiner:
                        sample_file: FileDescriptor,
                        console: Console):
         binning = sample_file.get_binning()
-        exposure = sample_file.get_exposure()
         temperature = sample_file.get_temperature()
         message_parts: [str] = []
         if data_model.get_group_by_size():

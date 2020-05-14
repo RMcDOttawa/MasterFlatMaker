@@ -1,7 +1,6 @@
 #
 #   Class to handle calibration of images using specified method (including none)
 #
-import sys
 from typing import Optional
 
 import numpy
@@ -29,7 +28,6 @@ class Calibrator:
                          console: Console,
                          session_controller: SessionController) -> [ndarray]:
         assert len(descriptors) > 0
-        sample_file = descriptors[0]
         calibration_type = self._data_model.get_precalibration_type()
         if calibration_type == Constants.CALIBRATION_NONE:
             return file_data
@@ -204,7 +202,6 @@ class Calibrator:
                             f"{best_match.get_name()}", +1, temp=True)
 
         return best_match
-
 
     # Get a small text tag about calibration to include in the FITs file comment
 

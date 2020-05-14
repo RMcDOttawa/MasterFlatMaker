@@ -1,5 +1,3 @@
-import random
-
 import numpy
 from astropy.io import fits
 from numpy.core.multiarray import ndarray
@@ -190,6 +188,5 @@ class RmFitsUtil:
     @classmethod
     def get_average_adus(cls, path) -> int:
         file_data = cls.fits_data_from_path(path)
-        average_adus = numpy.mean(file_data)
+        average_adus = float(numpy.mean(file_data))
         return int(round(average_adus))
-
