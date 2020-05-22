@@ -1,5 +1,5 @@
 /Users/richard/DropBox/dropbox/EWHO/Application\ Development/MasterFlatMaker/MasterFlatMaker.py \
-	-m \
+	-s 2 \
 	-gs \
 	-gf \
 	-gt 1.0 \

@@ -45,7 +45,7 @@
        <string/>
       </property>
       <property name="currentIndex">
-       <number>1</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="filesTab">
        <attribute name="title">
@@ -772,6 +772,9 @@
                <height>21</height>
               </size>
              </property>
+             <property name="toolTip">
+              <string>Minimum number of members in a group to be processed.</string>
+             </property>
             </widget>
            </item>
            <item row="1" column="0">
@@ -786,6 +789,9 @@
            </item>
            <item row="3" column="0">
             <widget class="QCheckBox" name="ignoreSmallGroupsCB">
+             <property name="toolTip">
+              <string>Ignore groups with fewer than the given number of members.</string>
+             </property>
              <property name="text">
               <string>Ignore groups with fewer than:</string>
              </property>

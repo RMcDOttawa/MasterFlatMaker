@@ -2,6 +2,8 @@ This program combines Flat Frames into a master flat.  If run without parameters
 window opens.  If run given a list of file names as args, then those are immediately processed
 without the UI interaction.
 
+	Video introduction and tutorial:  https://www.youtube.com/watch?v=Rj6V3quA_2Q
+
 Files with same dimensions can be manually selected for combination, or you can point the program
 to a large set of files and have it automatically group them by dimensions, filter, and temperature
 and produce a master flat for each of the grouped sets.

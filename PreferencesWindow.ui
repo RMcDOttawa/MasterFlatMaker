@@ -302,6 +302,9 @@
           <height>21</height>
          </size>
         </property>
+        <property name="toolTip">
+         <string>Minimum number of files to be processed in a group.</string>
+        </property>
        </widget>
       </item>
       <item row="0" column="0" colspan="2">
@@ -316,6 +319,9 @@
       </item>
       <item row="3" column="0">
        <widget class="QCheckBox" name="ignoreSmallGroupsCB">
+        <property name="toolTip">
+         <string>Don't process groups that have fewer than the given number of members.</string>
+        </property>
         <property name="text">
          <string>Ignore groups with fewer than:</string>
         </property>
@@ -550,6 +556,9 @@
    </item>
    <item row="2" column="1">
     <widget class="QCheckBox" name="displayAverageADUs">
+     <property name="toolTip">
+      <string>Display the ADU level for each flat frame.</string>
+     </property>
      <property name="text">
       <string>Display average ADUs value of files (slows down opening)</string>
      </property>

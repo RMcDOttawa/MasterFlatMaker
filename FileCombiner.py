@@ -5,7 +5,7 @@ from itertools import groupby
 from typing import Callable
 
 import numpy
-from sklearn.cluster import MeanShift
+import mean_shift as ms
 
 import MasterMakerExceptions
 from Calibrator import Calibrator
@@ -317,34 +317,6 @@ class FileCombiner:
             return [selected_files]   # One group with all the files
 
     # Given list of file descriptors, return a list of lists, where each outer list is all the
-    # file descriptors with the same exposure within a given tolerance.
-    # Note that, because of the "tolerance" comparison, this is a clustering analysis, not
-    # a simple python "groupby", which assumes the values are exact.
-    #
-    # For this simple 1-dimensional clustering we can use the MeanShift function from
-    # the machine learning package, sklearn
-
-    def get_groups_by_exposure(self,
-                               selected_files: [FileDescriptor],
-                               is_grouped: bool,
-                               bandwidth: float) -> [[FileDescriptor]]:
-        if is_grouped:
-            # We'll get the indices of the exposure clusters, then use those indices
-            # on the file descriptors
-            exposures: [float] = [file.get_exposure() for file in selected_files]
-            result_array: [[FileDescriptor]] = self.cluster_descriptors_by_values(bandwidth,
-                                                                                  exposures,
-                                                                                  selected_files)
-
-            # The groups array is in arbitrary order - determined by the clustering algorithm
-            # We'd like to have it in a predictable order.  Sort by first temperature in each group
-            result_array.sort(key=lambda g: g[0].get_exposure())
-            return result_array
-
-        else:
-            return [selected_files]   # One group with all the files
-
-    # Given list of file descriptors, return a list of lists, where each outer list is all the
     # file descriptors with the same temperature within a given tolerance
     # Note that, because of the "tolerance" comparison, this is a clustering analysis, not
     # a simple python "groupby", which assumes the values are exact.
@@ -378,9 +350,9 @@ class FileCombiner:
     def cluster_descriptors_by_values(bandwidth, cluster_values, selected_files):
         result_array: [[FileDescriptor]] = []
         data_to_cluster = numpy.array(cluster_values).reshape(-1, 1)
-        mean_shift = MeanShift(bandwidth=bandwidth)
-        mean_shift.fit(data_to_cluster)
-        arbitrary_cluster_labels = mean_shift.labels_
+        mean_shifter = ms.MeanShift()
+        mean_shift_result = mean_shifter.cluster(data_to_cluster, kernel_bandwidth=bandwidth)
+        arbitrary_cluster_labels = mean_shift_result.cluster_ids
         # cluster_labels is an array of integers, with each "cluster" having the same integer label
         unique_labels = numpy.unique(arbitrary_cluster_labels)
         # So if we gather the unique label values, that is gathering the clusters
@@ -393,6 +365,31 @@ class FileCombiner:
             this_cluster_descriptors: [FileDescriptor] = [selected_files[i] for i in member_indices]
             result_array.append(this_cluster_descriptors)
         return result_array
+
+    # Following is the original version of this method, that used the sklearn.cluster package
+    # version of MeanShift.  I stopped using this, and used the Matt Nedrich version of mean_shift
+    # instead, because I couldn't get the sklearn-based system to package to a Windows executable
+    # with pyinstaller. There is a known problem with sklearn and pyinstaller - it has hidden dependencies
+    # with a multiprocessing windows dll that don't resolve properly.
+    # @staticmethod
+    # def cluster_descriptors_by_values(bandwidth, cluster_values, selected_files):
+    #     result_array: [[FileDescriptor]] = []
+    #     data_to_cluster = numpy.array(cluster_values).reshape(-1, 1)
+    #     mean_shift = MeanShift(bandwidth=bandwidth)
+    #     mean_shift.fit(data_to_cluster)
+    #     arbitrary_cluster_labels = mean_shift.labels_
+    #     # cluster_labels is an array of integers, with each "cluster" having the same integer label
+    #     unique_labels = numpy.unique(arbitrary_cluster_labels)
+    #     # So if we gather the unique label values, that is gathering the clusters
+    #     for label in unique_labels:
+    #         # Flag the items in this cluster
+    #         cluster_membership: [bool] = arbitrary_cluster_labels == label
+    #         # Get the indices of the items in this cluster
+    #         member_indices: [int] = numpy.where(cluster_membership)[0].tolist()
+    #         # Get the descriptors in this cluster and add to the output array
+    #         this_cluster_descriptors: [FileDescriptor] = [selected_files[i] for i in member_indices]
+    #         result_array.append(this_cluster_descriptors)
+    #     return result_array
 
     # Combine the given files, output to the given output file
     # Use the combination algorithm given by the radio buttons on the main window
