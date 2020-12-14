@@ -637,7 +637,7 @@ class MainWindow(QMainWindow):
     #   or the full path of a single file if not
     #
 
-    def get_appropriate_output_path(self, sample_file: FileDescriptor):
+    def get_appropriate_output_path(self, sample_file: FileDescriptor) -> str:
         if self._data_model.get_group_by_size() \
                 or self._data_model.get_group_by_temperature() \
                 or self._data_model.get_group_by_filter():

@@ -100,6 +100,7 @@ class Calibrator:
             # No files in that directory, raise exception
             raise MasterMakerExceptions.AutoCalibrationDirectoryEmpty(auto_directory_path)
 
+        console.push_level()
         console.message(f"Calibrating from directory containing {len(directory_files)} files.", +1)
         result = file_data.copy()
         for input_index in range(len(descriptors)):
@@ -118,6 +119,7 @@ class Calibrator:
                 raise MasterMakerExceptions.IncompatibleSizes
             difference = result[input_index] - calibration_image
             result[input_index] = difference.clip(0, 0xFFFF)
+        console.pop_level()
         return result
 
     #
