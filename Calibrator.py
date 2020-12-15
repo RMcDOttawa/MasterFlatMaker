@@ -17,19 +17,32 @@ from SharedUtils import SharedUtils
 
 
 class Calibrator:
-    #
-    #   Create calibration object against the given data model's settings
-    #
+
     def __init__(self, data_model: DataModel):
+        """
+        Class initializer: create calibration object against the given data model's settings
+        :param data_model:      Data model giving relevant options such as calibration method
+        """
         self._data_model = data_model
 
-    def calibrate_images(self, file_data: [ndarray],
+    def calibrate_images(self,
+                         file_data: [ndarray],
                          descriptors: [FileDescriptor],
                          console: Console,
-                         session_controller: SessionController) -> [ndarray]:
+                         session_controller: SessionController
+                         ) -> [ndarray]:
+        """
+        Calibrate a given set of images
+        :param file_data:           List of images' data, as a list of 2d image matrices
+        :param descriptors:         List of descriptors corresponding to the files in the given image list
+        :param console:             Redirectable console output object
+        :param session_controller:  Controller for this subtask
+        :return:                    List of calibrated images, same format as input file_data
+        """
         assert len(descriptors) > 0
         calibration_type = self._data_model.get_precalibration_type()
         if calibration_type == Constants.CALIBRATION_NONE:
+            # We're actually not doing calibration, return original images
             return file_data
         elif calibration_type == Constants.CALIBRATION_PEDESTAL:
             return self.calibrate_with_pedestal(file_data,
@@ -53,7 +66,18 @@ class Calibrator:
                                 file_data: [ndarray],
                                 pedestal: int,
                                 console: Console,
-                                session_controller: SessionController) -> [ndarray]:
+                                session_controller: SessionController
+                                ) -> [ndarray]:
+        """
+        'Pedestal-calibrate' given set of images by subtracting a fixed amounnt from each pixel
+        (clipping at zero - no negative pixel values will be produced)
+        :param file_data:           List of images' data. Each is 2d image matrix
+        :param pedestal:            Fixed amount to subtract from each pixel
+        :param console:             Redirectable console output object
+        :param session_controller:  Controller for this subtask
+        :return:                    List of calibrated images
+        """
+
         result = file_data.copy()
         console.message(f"Calibrate with pedestal = {pedestal}", 0)
         for index in range(len(result)):
@@ -63,8 +87,22 @@ class Calibrator:
             result[index] = reduced_by_pedestal.clip(0, 0xFFFF)
         return result
 
-    def calibrate_with_file(self, file_data: [ndarray], calibration_file_path: str, console: Console,
-                            session_controller: SessionController) -> [ndarray]:
+    def calibrate_with_file(self,
+                            file_data: [ndarray],
+                            calibration_file_path: str,
+                            console: Console,
+                            session_controller: SessionController
+                            ) -> [ndarray]:
+        """
+        Calibrate given set of images by subtracting a fixed image file from each.
+        (clipping at zero - no negative pixel values will be produced)
+        Given calibration file must be the same size as all the images to be calibrated.
+        :param file_data:               List of images' data. Each is 2d image matrix
+        :param calibration_file_path:   Full path to calibration file
+        :param console:                 Redirectable console output object
+        :param session_controller:      Controller for this subtask
+        :return:                        List of calibrated images
+        """
         console.message(f"Calibrate with file: {calibration_file_path}", 0)
         result = file_data.copy()
         calibration_image = RmFitsUtil.fits_data_from_path(calibration_file_path)
@@ -79,15 +117,26 @@ class Calibrator:
             result[index] = difference.clip(0, 0xFFFF)
         return result
 
-    # Calibrate the given files' contents, each with the best-matching calibration file
-    # from a directory.  "Best" is measured by trying to match both the exposure time
-    # and temperature, with more weight to the exposure time.  A separate file is chosen
-    # for each input image, since the exposure times of collected flats often vary
-    # during the collection session, to keep the ADU level constant as the light changes.
-
-    def calibrate_with_auto_directory(self, file_data: [ndarray], auto_directory_path: str,
-                                      descriptors: [FileDescriptor], console: Console,
-                                      session_controller: SessionController) -> [ndarray]:
+    def calibrate_with_auto_directory(self,
+                                      file_data: [ndarray],
+                                      auto_directory_path: str,
+                                      descriptors: [FileDescriptor],
+                                      console: Console,
+                                      session_controller: SessionController
+                                      ) -> [ndarray]:
+        """
+        Calibrate the given files' contents, each with the best-matching calibration file
+        from a directory.  "Best" is measured by trying to match both the exposure time
+        and temperature, with more weight to the exposure time.  A separate file is chosen
+        for each input image, since the exposure times of collected flats often vary
+        during the collection session, to keep the ADU level constant as the light changes.
+        :param file_data:               List of images' data (list of 2-d matrix of pixel values)
+        :param auto_directory_path:     Path to folder of calibration images
+        :param descriptors:             Descs of files corresponding to the given images
+        :param console:                 Redirectable console output object
+        :param session_controller:      Controller for this subtask
+        :return:                        List of calibrated images
+        """
         assert len(file_data) > 0
         assert len(file_data) == len(descriptors)
 
@@ -130,9 +179,26 @@ class Calibrator:
     #   Exceptions thrown:
     #       NoSuitableAutoBias
 
-    def get_best_calibration_file(self, directory_files, sample_file: FileDescriptor,
+    def get_best_calibration_file(self,
+                                  directory_files,
+                                  sample_file: FileDescriptor,
                                   session_controller: SessionController,
-                                  console: Console) -> Optional[str]:
+                                  console: Console
+                                  ) -> Optional[str]:
+        """
+        Get the best matched calibration file in the auto directory.  Only BIAS or DARK files
+        of the correct size will be selected. If no suitable file, raise exception.
+
+        Exceptions thrown:
+            NoSuitableAutoBias
+
+        :param directory_files:         path to folder of calibration images
+        :param sample_file:             Description of file to be calibrated
+        :param session_controller:      Controller for this subtask
+        :param console:                 Redirectable console output object
+        :return:                        Path to best calibration file
+        """
+
         # Filter to Bias or Dark files if option and give exception if none
         if self._data_model.get_auto_directory_bias_only():
             all_descriptors = list((d for d in directory_files
@@ -158,14 +224,29 @@ class Calibrator:
                                            console)
         return closest_match.get_absolute_path()
 
-    def all_descriptors_from_directory(self, directory_path: str,
+    def all_descriptors_from_directory(self,
+                                       directory_path: str,
                                        recursive: bool) -> [FileDescriptor]:
+        """
+        Get file-descriptors for all the files in the specified directory
+        :param directory_path:  Absolute path to directory to be scanned
+        :param recursive:       If True, also recursively scann all sub-directories
+        :return:                Array of file descriptors for contents
+        """
         paths: [str] = SharedUtils.files_in_directory(directory_path, recursive)
         descriptors = RmFitsUtil.make_file_descriptions(paths)
         return descriptors
 
-    def filter_to_correct_size(self, all_descriptors: [FileDescriptor], sample_file: FileDescriptor) \
+    def filter_to_correct_size(self,
+                               all_descriptors: [FileDescriptor],
+                               sample_file: FileDescriptor) \
             -> [FileDescriptor]:
+        """
+        Reduce the given list of file descriptors to only those of the same image dimensions as the given sample
+        :param all_descriptors:     Input list of all descriptors to be filtered
+        :param sample_file:         Descriptor of file whose image size is to be matched
+        :return:                    List of zero or more file descriptors matching the given sample's size
+        """
         x_dimension = sample_file.get_x_dimension()
         y_dimension = sample_file.get_y_dimension()
         binning = sample_file.get_binning()
@@ -176,14 +257,23 @@ class Calibrator:
                     and d.get_binning() == binning]
         return filtered
 
-    # Calibrate the given files, each with the closest-matching calibration file found
-    # in a given directory.  We try to match both the exposure time and the temperature,
-    # giving more weight to the exposure time.
-
     def closest_match(self, descriptors: [FileDescriptor],
                       target_exposure: float,
                       target_temperature: float,
                       console: Console) -> FileDescriptor:
+        """
+        Find the calibration file, from the given list of candidates, that is the best match for calibrating
+        an image with the given exposure and temperature.  We have already ensured that the candidate calibration
+        files are all the correct size, so we now try to match both the exposure time and the temperature,
+        giving more weight to the exposure time.
+
+        :param descriptors:             Descriptions of potential calibration files
+        :param target_exposure:         Exposure time of the image to be calibrated
+        :param target_temperature:      CCD temperature of the image to be calibrated
+        :param console:                 Redirectable console output object
+        :return:                        Description of the best-matching calibration file
+        """
+
         # Assign a score to each possible calibration file, based on exposure and temperature
         f: FileDescriptor
         file_temperatures = numpy.array([f.get_temperature() for f in descriptors])
@@ -205,9 +295,12 @@ class Calibrator:
 
         return best_match
 
-    # Get a small text tag about calibration to include in the FITs file comment
-
     def fits_comment_tag(self) -> str:
+        """
+        Get a small text tag about the calibration mode to include in the FITs file comment
+        :return:    String describing what kind of calibration is in use.  These strings
+                    are arbitrary, and may be changed at will.
+        """
         calibration_type = self._data_model.get_precalibration_type()
         if calibration_type == Constants.CALIBRATION_NONE:
             return "(no calibration)"

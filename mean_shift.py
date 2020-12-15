@@ -5,7 +5,7 @@ import numpy
 # This implementation of the Mean Shift clustering algorithm was written by Matt Nedrich
 # and made freely available from his GitHub site.  Profound thanks to Matt.
 #
-# This, Matt's version is being used instead of the sklearn.cluster MeanShift class because sklearn
+# This, Matt's version, is being used instead of the sklearn.cluster MeanShift class because sklearn
 # doesn't work well with pyinstaller on windows systems - it generates a dependency on a multiprocessing
 # dll but doesn't generate the correct dependency information to cause that dll to be included in the
 # resulting executable.
@@ -41,8 +41,10 @@ import numpy
 # import mean_shift_utils as ms_utils
 # Imported from former point_grouper file:
 
+# Comments in the methods below are author Matt's
 
-def euclidean_dist(point_a: numpy.ndarray, point_b: numpy.ndarray) -> float:
+def euclidean_dist(point_a: numpy.ndarray,
+                   point_b: numpy.ndarray) -> float:
     if len(point_a) != len(point_b):
         raise Exception("expected point dimensionality to match")
     total = float(0)

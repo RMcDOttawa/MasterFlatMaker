@@ -1,3 +1,9 @@
+#
+#   Custom excepts that are used to indicate some problem, discovered deep in a processing loop,
+#   to the outer-level control loop.  We use the built-in Python exceptions whenever possible,
+#   and the following custom exceptions when necessary
+#
+
 
 #
 #   Auto-bias from directory is selected, but we were unable to find a suitable bias file

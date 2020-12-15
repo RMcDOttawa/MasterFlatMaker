@@ -4,7 +4,8 @@ import os
 
 
 class FileDescriptor:
-    # Code for file type - corresponds to the numbers TheSkyX uses for same
+    # Code for file type - corresponds to the numbers TheSkyX uses for same.
+    # These can't be changed, since they are used in JavaScript commands send to the TheSkyX server.
     FILE_TYPE_UNKNOWN = 0
     FILE_TYPE_LIGHT = 1
     FILE_TYPE_BIAS = 2
@@ -12,6 +13,10 @@ class FileDescriptor:
     FILE_TYPE_FLAT = 4
 
     def __init__(self, absolute_path: str):
+        """
+        Initialize file descriptor object, with given path name and default values.
+        :param absolute_path:   Absolute path to file in flie system
+        """
         self._absolute_path: str = absolute_path
         self._type: int = self.FILE_TYPE_UNKNOWN
         self._binning: int = 0
@@ -65,9 +70,13 @@ class FileDescriptor:
     def get_y_dimension(self) -> int:
         return self._y_size
 
-    # Get the "size key" used for grouping files.
-    # Size key is a string with x and y dimensions and binning joined by a delimiter
     def get_size_key(self):
+        """
+        Get the "size key" used for grouping files.
+        Clustering algorithm clusters on a single value, but size is 2-dimensional,
+        so size key is a string with x and y dimensions and binning joined by a delimiter
+        :return:    String uniquely encoding the height and width, suitable for clustering
+        """
         return f"binned {self._binning} x {self._binning}, dimensions " \
                f"{self._x_size} x {self._y_size}"
 

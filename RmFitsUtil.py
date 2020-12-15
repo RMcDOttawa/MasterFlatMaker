@@ -20,6 +20,11 @@ class RmFitsUtil:
     # (type_code, bin_x, bin_y, filter) = RmFitsUtil.categorize_file(name)
     @classmethod
     def make_file_descriptor(cls, absolute_path):
+        """
+        Create a file descriptor describing important attributes of file at given path
+        :param absolute_path:   Path to file
+        :return:                Descriptor of file
+        """
         descriptor = FileDescriptor(absolute_path)
 
         (type_code, x_size, y_size, x_bin, y_bin, filter_name, exposure, temperature) \
@@ -120,9 +125,20 @@ class RmFitsUtil:
                                   filter_name: str,
                                   binning: int,
                                   comment: str):
-        """Write a new FITS file with the given data and name.
+        """
+        Write a new FITS file with the given data and name.
         Create a FITS header in the file by copying the header from a given existing file
-        and adding a given comment"""
+        and adding a given comment
+        :param name:                File name
+        :param data:                2-dimensional array of pixel values, the file contents
+        :param file_type_code:      What kind of FITS image file is this (dark, bias, flat, etc.)?
+        :param image_type_string:   String for FITS filel "IMGTYP" parameter
+        :param exposure:            Exposure time in seconds
+        :param temperature:         Temperature in degrees if known, else 0
+        :param filter_name:         Name of filter if known
+        :param binning:             Binning value of this frame (1, 2, 3, or 4)
+        :param comment:             General comment describing this file
+        """
 
         #  Create header
         header = fits.Header()
@@ -148,6 +164,11 @@ class RmFitsUtil:
 
     @classmethod
     def fits_file_type_string(cls, file_type):
+        """
+        Translate fits file type code number to string for file name
+        :param file_type:   File type numeric code
+        :return:            String for file name
+        """
         if file_type == FileDescriptor.FILE_TYPE_BIAS:
             return "BIAS"
         elif file_type == FileDescriptor.FILE_TYPE_DARK:
@@ -158,13 +179,13 @@ class RmFitsUtil:
             return "LIGHT"
         else:
             return "UNKNOWN"
-
-    # Read ndarray data arrays for all the given file names.
-    # Result is a list of n ndarrays, where n is the number of file_names.
-    # Each ndarray is a 2-dimensional array of the data for that fits file.
-
     @classmethod
     def read_all_files_data(cls, file_names: [str]) -> [ndarray]:
+        """
+        Read ndarray data arrays for all the given file names.
+        :param file_names:  List of file names
+        :return:            List of 2-dimensional matrices of pixel values
+        """
         result_array: [ndarray] = []
         for name in file_names:
             result_array.append(cls.fits_data_from_path(name))
@@ -172,13 +193,22 @@ class RmFitsUtil:
 
     @classmethod
     def fits_data_from_path(cls, file_name: str) -> ndarray:
+        """
+        Get the image data from a fits file for one file, given the file path
+        :param file_name:   Path to fits file to be read
+        :return:            Matrix of pixel values representing the image
+        """
         with fits.open(file_name) as hdul:
             primary = hdul[0]
-            # Exposure and temperature
             return primary.data.astype(float)
 
     @classmethod
     def make_file_descriptions(cls, file_names: [str]) -> [FileDescriptor]:
+        """
+        Make a list of file descriptors for the files in the given list of names
+        :param file_names:  List of names to be described
+        :return:            List of descriptors
+        """
         result: [FileDescriptor] = []
         for absolute_path in file_names:
             descriptor = RmFitsUtil.make_file_descriptor(absolute_path)
@@ -187,6 +217,11 @@ class RmFitsUtil:
 
     @classmethod
     def get_average_adus(cls, path) -> int:
+        """
+        Calculate the Average ADUs (average pixel values) of all pixels in the given file
+        :param path:        Path to the file to be calculated
+        :return:            Average ADUs of the image in the file
+        """
         file_data = cls.fits_data_from_path(path)
         average_adus = float(numpy.mean(file_data))
         return int(round(average_adus))

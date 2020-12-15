@@ -1,6 +1,6 @@
 #
 #   Window controller for the main window
-#   Manages the UI and initiates a combination action if all is well
+#   Manages the UI and initiates a combination action as a subtask if all is well
 #
 
 import os
@@ -27,8 +27,13 @@ from Validators import Validators
 
 class MainWindow(QMainWindow):
 
-    def __init__(self, preferences: Preferences, data_model: DataModel):
-        """Initialize MainWindow class"""
+    def __init__(self, preferences: Preferences,
+                 data_model: DataModel):
+        """
+        Initialize the main window controller
+        :param preferences: Preferences object for application defaults
+        :param data_model:  Data model object for the current run
+        """
         self._preferences = preferences
         self._data_model = data_model
         QMainWindow.__init__(self)
@@ -118,10 +123,8 @@ class MainWindow(QMainWindow):
         self.enable_fields()
         self.enable_buttons()
 
-    # Connect UI controls to methods here for response
     def connect_responders(self):
         """Connect UI fields and controls to the methods that respond to them"""
-
         # Menu items
         self.ui.actionPreferences.triggered.connect(self.preferences_menu_triggered)
         self.ui.actionOpen.triggered.connect(self.pick_files_button_clicked)
@@ -201,8 +204,14 @@ class MainWindow(QMainWindow):
 
     # Catch window resizing so we can record the changed size
 
-    def eventFilter(self, triggering_object: QObject, event: QEvent) -> bool:
-        """Event filter, looking for window resize events so we can remember the new size"""
+    def eventFilter(self, triggering_object: QObject,
+                    event: QEvent) -> bool:
+        """
+        Event filter, looking for window resize events so we can remember the new size
+        :param triggering_object:   Object trigger the event we will be inspecting
+        :param event:               The event we are inspecting for move or resize
+        :return:                    Always "false" indicating event still needs to be handled (we didn't)
+        """
         if isinstance(event, QResizeEvent):
             window_size = event.size()
             self._preferences.set_main_window_size(window_size)
@@ -211,21 +220,16 @@ class MainWindow(QMainWindow):
             self._preferences.set_main_window_position(new_position)
         return False  # Didn't handle event
 
-    # "Ignore file type" button clicked.  Tell the data model the new value.
     def ignore_file_type_clicked(self):
         """Respond to clicking 'ignore file type' button"""
         self._data_model.set_ignore_file_type(self.ui.ignoreFileType.isChecked())
         self._table_model.set_ignore_file_type(self._data_model.get_ignore_file_type())
-
-    # Select-all button has been clicked
 
     def select_all_clicked(self):
         """Select all the rows in the files table"""
         self.ui.filesTable.selectAll()
         self.enable_buttons()
         self.enable_fields()
-
-    # Select-None button has been clicked
 
     def select_none_clicked(self):
         """Clear the table selection, leaving no rows selected"""
@@ -250,36 +254,57 @@ class MainWindow(QMainWindow):
         self.enable_buttons()
 
     def group_by_size_clicked(self):
+        """
+        Group by size option checkbox has been changed, record new setting
+        """
         self._data_model.set_group_by_size(self.ui.groupBySizeCB.isChecked())
         self.enable_fields()
         self.enable_buttons()
 
     def group_by_temperature_clicked(self):
+        """
+        Group by temperature option checkbox has been changed, record new setting
+        """
         self._data_model.set_group_by_temperature(self.ui.groupByTemperatureCB.isChecked())
         self.enable_fields()
         self.enable_buttons()
 
     def group_by_filter_clicked(self):
+        """
+        Group by filter option checkbox has been changed, record new setting
+        """
         self._data_model.set_group_by_filter(self.ui.groupByFilterCB.isChecked())
         self.enable_fields()
         self.enable_buttons()
 
     def ignore_small_groups_clicked(self):
+        """
+        Ignore groups smaller than xxx setting has been changed, record new setting
+        """
         self._data_model.set_ignore_groups_fewer_than(self.ui.ignoreSmallGroupsCB.isChecked())
         self.enable_fields()
         self.enable_buttons()
 
     def auto_recursive_clicked(self):
+        """
+        Recursive directory traversal checkbox has been changed, record new setting
+        """
         self._data_model.set_auto_directory_recursive(self.ui.autoRecursive.isChecked())
         self.enable_fields()
         self.enable_buttons()
 
     def auto_bias_only_clicked(self):
+        """
+        Bias & dark files only for auto-calibration checkbox has been changed, record new setting
+        """
         self._data_model.set_auto_directory_bias_only(self.ui.autoBiasOnly.isChecked())
         self.enable_fields()
         self.enable_buttons()
 
     def display_auto_results_clicked(self):
+        """
+        Display auto-calibration results checkbox has been changed, record new setting
+        """
         self._data_model.set_display_auto_select_results(self.ui.displayAutoResultsCB.isChecked())
         self.enable_fields()
         self.enable_buttons()
@@ -410,7 +435,16 @@ class MainWindow(QMainWindow):
                 self.error_dialog("File Not Found", f"File \"{exception.filename}\" was not found or not readable")
         self.enable_buttons()
 
-    def error_dialog(self, brief_message: str, long_message: str, detailed_text: str = ""):
+    def error_dialog(self,
+                     brief_message: str,
+                     long_message: str,
+                     detailed_text: str = ""):
+        """
+        Produce a modal dialog giving an error message
+        :param brief_message:   Short form of message
+        :param long_message:    Long form of message
+        :param detailed_text:   Additional detail expanding on the situation
+        """
         dialog = QMessageBox()
         dialog.setText(brief_message)
         if len(long_message) > 0:
@@ -433,6 +467,9 @@ class MainWindow(QMainWindow):
         self.enable_fields()
 
     def precalibration_radio_group_clicked(self):
+        """
+        One of the buttons in the precalibration-type radio group has been clicked. Record setting.
+        """
         calibration_type: int
         if self.ui.noPreClalibrationRB.isChecked():
             calibration_type = Constants.CALIBRATION_NONE
@@ -448,6 +485,8 @@ class MainWindow(QMainWindow):
         self.enable_fields()
 
     def select_precalibration_file_clicked(self):
+        """Button to select a fixed precalibration file has been clicked.
+        Use a file dialog to get the file from the user"""
         (file_name, _) = QFileDialog.getOpenFileName(parent=self, caption="Select dark or bias file",
                                                      filter="FITS files(*.fit *.fits)",
                                                      options=QFileDialog.ReadOnly)
@@ -458,6 +497,10 @@ class MainWindow(QMainWindow):
         self.enable_buttons()
 
     def select_auto_calibration_directory_clicked(self):
+        """
+        button to select directory of automatic calibration library has been clicked
+        Get the directory using a dialog, and record it.
+        """
         file_name = QFileDialog.getExistingDirectory(parent=None, caption="Calibration File Directory")
         if len(file_name) > 0:
             self._data_model.set_precalibration_auto_directory(file_name)
@@ -558,12 +601,12 @@ class MainWindow(QMainWindow):
         all_fields_good = all(valid for valid in self._field_validity.values())
         return all_fields_good
 
-    #
-    #   The user has clicked "Combine", which is the "go ahead and do the work" button.
-    #   The actual work is done as a thread hanging under a console window.  So all we do here
-    #   is create and run the console window.
-    #
     def combine_selected_clicked(self):
+        """
+        The user has clicked "Combine", which is the "go ahead and do the work" button.
+        """
+        #   The actual work is done as a thread hanging under a console window.  So all we do here
+        #   is create and run the console window.
         if self.commit_fields_continue():
             # Get the list of selected files
             selected_files: [FileDescriptor] = self.get_selected_file_descriptors()
@@ -586,11 +629,14 @@ class MainWindow(QMainWindow):
             # So we'll exit now to encourage them to fix the error.
             pass
 
-    # Run the "editing finished" methods on all the inputs in case they have typed
-    # something but not hit tab or return to commit it - they will expect what they
-    # see to be what gets processed.  Then re-check if the Commit button is still enabled.
-
     def commit_fields_continue(self) -> bool:
+        """
+        Run the "editing finished" methods on all the inputs in case they have typed
+        something but not hit tab or return to commit it - they will expect what they
+        see to be what gets processed.  Then re-check if the Commit button is still enabled.
+
+        :return:    Indicator of whether Commit is still enabled - i.e. all is good to go.
+        """
         self.min_max_drop_changed()
         self.minimum_group_size_changed()
         self.pedestal_amount_changed()
@@ -601,13 +647,20 @@ class MainWindow(QMainWindow):
         return self.ui.combineSelectedButton.isEnabled()
 
     def get_group_output_directory(self) -> str:
+        """
+        Return the directory to be used for output from a grouped operation
+        :return:        Path name to directory
+        """
         dialog = QFileDialog()
         dialog.setFileMode(QFileDialog.DirectoryOnly)
         (file_name, _) = dialog.getSaveFileName(parent=None, caption="Output Directory")
         return None if len(file_name.strip()) == 0 else file_name
 
-    # Get the file descriptors corresponding to the selected table rows
     def get_selected_file_descriptors(self) -> [FileDescriptor]:
+        """
+        Get the file descriptors corresponding to the selected table rows
+        :return:        List of file descriptors for selected files
+        """
         table_descriptors: [FileDescriptor] = self._table_model.get_file_descriptors()
         selected_rows: [int] = self.ui.filesTable.selectionModel().selectedRows()
         result: [FileDescriptor] = []
@@ -616,28 +669,38 @@ class MainWindow(QMainWindow):
             result.append(table_descriptors[row_index])
         return result
 
-    # Prompt user for output file to receive combined file
     def get_output_file(self, suggested_file_path: str) -> str:
+        """
+        Prompt user for output file to receive combined file
+
+        :param suggested_file_path:     Path to start the dialog - most likely position, last used, etc.
+        :return:                        String of selected output path, None if Canceled
+        """
         dialog = QFileDialog()
         dialog.setFileMode(QFileDialog.AnyFile)
         (file_name, _) = dialog.getSaveFileName(parent=None, caption="Master File", directory=suggested_file_path,
                                                 filter="FITS files (*.FIT)")
         return None if len(file_name.strip()) == 0 else file_name
 
-    # Determine if there are enough files selected for the Min-Max algorithm
-    # If that algorithm isn't selected, then return True
-    # Otherwise there should be more files selected than 2*n, where n is the
-    # min-max clipping value
     def min_max_enough_files(self, num_selected: int) -> bool:
+        """
+        Determine if there are enough files selected for the Min-Max algorithm
+        If that algorithm isn't selected, then return True
+        Otherwise there should be more files selected than 2*n, where n is the
+        min-max clipping value
+        :param num_selected:    Number of files selected for processing
+        :return:                Indicator of whether Min-Max can be selected
+        """
         return True if self._data_model.get_master_combine_method() != Constants.COMBINE_MINMAX \
             else num_selected > (2 * self._data_model.get_min_max_number_clipped_per_end())
 
-    #
-    #   Get output path.  This is the directory to receive multiple files if we are group processing,
-    #   or the full path of a single file if not
-    #
-
     def get_appropriate_output_path(self, sample_file: FileDescriptor) -> str:
+        """
+        Get output path.  This is the directory to receive multiple files if we are group processing,
+        or the full path of a single file if not
+        :param sample_file:     File sample to provide needed metadata for file name
+        :return:                String of output path for file
+        """
         if self._data_model.get_group_by_size() \
                 or self._data_model.get_group_by_temperature() \
                 or self._data_model.get_group_by_filter():
@@ -648,11 +711,10 @@ class MainWindow(QMainWindow):
                                                   self._data_model.get_min_max_number_clipped_per_end())
             return self.get_output_file(path)
 
-    #
-    #   Fill in the text fields in the main pane that summarize the settings
-    #
     def fill_options_readout(self):
-
+        """
+        Fill in the text fields in the main pane that summarize the settings
+        """
         # Precalibration type, if any
 
         precal_type = self._data_model.get_precalibration_type()
@@ -709,20 +771,25 @@ class MainWindow(QMainWindow):
         else:
             self.ui.dispositionInfo1.setText(self._data_model.get_disposition_subfolder_name())
 
-    #
-    #   The tab view has changed. Re-generate the options summary
-    #
     def tab_changed(self):
+        """
+        The tab view has changed. Re-generate the options summary
+        """
         self.fill_options_readout()
 
     def remove_from_ui(self, path_to_remove: str):
+        """
+        Remove the given file (by given path name) from the table of files in the UI
+        :param path_to_remove:  Path name of file to remove
+        """
         self._table_model.remove_file_path(path_to_remove)
 
-    #   Display Average ADUs clicked.  Change the setting and re-display the table
-    #   If we're turning this feature "on" we may need to re-read the files if they've never
-    #   been read for the ADU values
-
     def display_average_adus_clicked(self):
+        """
+        Display Average ADUs clicked.  Change the setting and re-display the table
+        If we're turning this feature "on" we may need to re-read the files if they've never
+        been read for the ADU values
+        """
         self._data_model.set_display_average_adus(self.ui.displayAvgADUs.isChecked())
         # If we just turned this feature "on" we need to ensure the ADU values are known
         if self._data_model.get_display_average_adus():
@@ -737,6 +804,10 @@ class MainWindow(QMainWindow):
         self._table_model.adu_display_changed(self._data_model.get_display_average_adus())
 
     def get_adu_values_for_descriptors(self, descriptors: [FileDescriptor]):
+        """
+        Calculate and store the Average ADU figure for each file in the given list
+        :param descriptors:     List of descriptors for files to be processed
+        """
         for descriptor in descriptors:
             path = descriptor.get_absolute_path()
             adus = RmFitsUtil.get_average_adus(path)
